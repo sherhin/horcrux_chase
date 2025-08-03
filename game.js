@@ -9,9 +9,20 @@ let tomX = 10 * tileSize;
 let tomY = 2 * tileSize;
 let horcruxes = [];
 let assetsLoaded = 0;
+let tomSpeaking = false;
+let tomSpeechTimer = null;
 
 const restartBtn = document.getElementById('restartBtn');
 
+const tomQuotes = [
+    "Отдай это, Поттер.",
+    "Ты будешь умолять меня о пощаде!",
+    "Это МОЁ!",
+    "Ты за это поплатишься.",
+    "Бережно обращайся с моей душой.",
+    "Ты думаешь, это поможет сбежать от меня?",
+    "Зачем убегать, Гарри?"
+];
 
 
 const map = [
@@ -52,6 +63,22 @@ function loadImage(src) {
     img.onload = assetLoaded;
     return img;
 }
+
+const tomSpeech = document.getElementById('tomSpeech');
+function randomTomQuote() {
+    const index = Math.floor(Math.random() * tomQuotes.length);
+    tomSpeech.innerText = tomQuotes[index];
+    tomSpeech.style.display = 'block';
+    tomSpeaking = true;
+
+    if (tomSpeechTimer) clearTimeout(tomSpeechTimer);
+
+    tomSpeechTimer = setTimeout(() => {
+        tomSpeech.style.display = 'none';
+        tomSpeaking = false;
+    }, 2000);
+}
+
 
 function generateHorcruxes() {
     horcruxes.length = 0; // очищаем текущий массив
@@ -106,6 +133,7 @@ function checkHorcruxPickup(col, row) {
         if (horcruxes[i].x === col && horcruxes[i].y === row) {
             horcruxes.splice(i, 1);
             console.log('Подобран хоркрукс!');
+            randomTomQuote();
             break;
         }
     }
@@ -217,6 +245,14 @@ function draw() {
     } else {
         restartBtn.style.display = "none";
     }
+    if (tomSpeaking) {
+    const rect = canvas.getBoundingClientRect();
+    const speechX = rect.left + tomX + tileSize / 2;
+    const speechY = rect.top + tomY - 20;
+
+    tomSpeech.style.left = `${speechX}px`;
+    tomSpeech.style.top = `${speechY}px`;
+}
 }
 function resetGame() {
     harryX = tileSize;
