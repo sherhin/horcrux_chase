@@ -3,8 +3,8 @@ import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
-import { updateAndDrawParticles, particles } from './particle.js';
-import { generateDementors, drawDementors, updateDementors } from './dementor.js';
+import { updateAndDrawParticles, particles, spawnParticles } from './particle.js';
+import { generateDementors, drawDementors, updateDementors, getDementors } from './dementor.js';
 import { initButtonControls } from './ui.js';
 
 let canvas, ctx;
@@ -186,6 +186,20 @@ function startTomLoop() {
     }
   }, 300);
 }
+
+function checkDementorCollision() {
+  const playerCol = Math.floor(player.x / tileSize);
+  const playerRow = Math.floor(player.y / tileSize);
+  const px = player.x + tileSize / 2;
+  const py = player.y + tileSize / 2;
+  getDementors().forEach(d => {
+    const dCol = Math.floor(d.x / tileSize);
+    const dRow = Math.floor(d.y / tileSize);
+    if (dCol === playerCol && dRow === playerRow) {
+      spawnParticles(px, py, 'harry');
+    }
+  });
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawMap(ctx, tileSize, wallImage, floorImage);
@@ -216,6 +230,7 @@ function draw() {
 
 function loop() {
   updateDementors(tileSize, map);
+  checkDementorCollision();
   draw();
   requestAnimationFrame(loop);
 }

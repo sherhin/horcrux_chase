@@ -29,7 +29,12 @@ export const player = {
         return (currentCol === col && currentRow === row) ||
                (targetCol === col && targetRow === row);
       });
-      if (occupied) return null;
+      if (occupied) {
+        const px = this.x + tileSize / 2;
+        const py = this.y + tileSize / 2;
+        spawnParticles(px, py, 'harry', dx, dy);
+        return null;
+      }
       const px = this.x + tileSize / 2;
       const py = this.y + tileSize / 2;
       this.x = nx;
