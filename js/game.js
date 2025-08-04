@@ -187,16 +187,28 @@ function startTomLoop() {
   }, 300);
 }
 
+const activeDementorCollisions = new Set();
+
 function checkDementorCollision() {
+  if (gameState !== 'playing') return;
+
   const playerCol = Math.floor(player.x / tileSize);
   const playerRow = Math.floor(player.y / tileSize);
   const px = player.x + tileSize / 2;
   const py = player.y + tileSize / 2;
+
   getDementors().forEach(d => {
     const dCol = Math.floor(d.x / tileSize);
     const dRow = Math.floor(d.y / tileSize);
+
     if (dCol === playerCol && dRow === playerRow) {
-      spawnParticles(px, py, 'harry');
+      if (!activeDementorCollisions.has(d)) {
+        activeDementorCollisions.add(d);
+        spawnParticles(px, py, 'harry');
+        gameState = 'lose';
+      }
+    } else {
+      activeDementorCollisions.delete(d);
     }
   });
 }
