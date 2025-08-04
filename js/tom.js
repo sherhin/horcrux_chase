@@ -56,9 +56,15 @@ export function sayTomQuote() {
 export function updateSpeechPosition(canvas, tileSize) {
     if (!speaking) return;
     const rect = canvas.getBoundingClientRect();
-    const sx = rect.left + tom.x + tileSize / 2;
-    const sy = rect.top + tom.y - 40; // чуть выше
+    let sx = rect.left + tom.x + tileSize / 2;
+    let sy = rect.top + tom.y - 40; // чуть выше
     const div = document.getElementById('tomSpeech');
+    const width = div.offsetWidth;
+    const height = div.offsetHeight;
+
+    sx = Math.max(rect.left, Math.min(sx, rect.right - width));
+    sy = Math.max(rect.top, Math.min(sy, rect.bottom - height));
+
     div.style.left = `${sx}px`;
     div.style.top = `${sy}px`;
 }
