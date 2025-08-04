@@ -1,22 +1,101 @@
 let dementors = [];
 
-export function generateDementors(image, map) {
+export function getDementors() {
+  return dementors;
+}
+
+export function generateDementors(image, map, tileSize) {
   dementors = [];
   let count = 0;
 
   while (count < 3) {
-    let x = Math.floor(Math.random() * map[0].length);
-    let y = Math.floor(Math.random() * map.length);
+    const col = Math.floor(Math.random() * map[0].length);
+    const row = Math.floor(Math.random() * map.length);
 
-    if (map[y][x] === 0 && !dementors.some(d => d.x === x && d.y === y)) {
-      dementors.push({ image, x, y });
+    const px = col * tileSize;
+    const py = row * tileSize;
+    const occupied = dementors.some(d => Math.floor(d.x / tileSize) === col && Math.floor(d.y / tileSize) === row);
+
+    if (map[row][col] === 0 && !occupied) {
+      dementors.push({
+        image,
+        x: px,
+        y: py,
+        targetX: px,
+        targetY: py,
+        isMoving: false,
+        lastMoveTime: performance.now()
+      });
       count++;
     }
   }
 }
 
+export function updateDementors(tileSize, map) {
+  const now = performance.now();
+  dementors.forEach(d => {
+    if (d.isMoving || now - d.lastMoveTime < 1000) return;
+
+    const directions = [
+      { dx: 0, dy: -1 },
+      { dx: 0, dy: 1 },
+      { dx: -1, dy: 0 },
+      { dx: 1, dy: 0 }
+    ];
+
+    for (let i = directions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [directions[i], directions[j]] = [directions[j], directions[i]];
+    }
+
+    const col = Math.floor(d.x / tileSize);
+    const row = Math.floor(d.y / tileSize);
+
+    for (const dir of directions) {
+      const newCol = col + dir.dx;
+      const newRow = row + dir.dy;
+      if (map[newRow]?.[newCol] !== 0) continue;
+
+      const occupied = dementors.some(other => {
+        if (other === d) return false;
+        const oCol = Math.floor((other.isMoving ? other.targetX : other.x) / tileSize);
+        const oRow = Math.floor((other.isMoving ? other.targetY : other.y) / tileSize);
+        return oCol === newCol && oRow === newRow;
+      });
+      if (occupied) continue;
+
+      d.targetX = newCol * tileSize;
+      d.targetY = newRow * tileSize;
+      d.isMoving = true;
+
+      const startX = d.x;
+      const startY = d.y;
+      const startTime = performance.now();
+      const duration = 600;
+
+      const animate = (time) => {
+        const elapsed = time - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        d.x = startX + (d.targetX - startX) * t;
+        d.y = startY + (d.targetY - startY) * t;
+        if (elapsed < duration) {
+          requestAnimationFrame(animate);
+        } else {
+          d.x = d.targetX;
+          d.y = d.targetY;
+          d.isMoving = false;
+          d.lastMoveTime = performance.now();
+        }
+      };
+
+      requestAnimationFrame(animate);
+      break;
+    }
+  });
+}
+
 export function drawDementors(ctx, tileSize) {
   dementors.forEach(d => {
-    ctx.drawImage(d.image, d.x * tileSize, d.y * tileSize, tileSize, tileSize);
+    ctx.drawImage(d.image, d.x, d.y, tileSize, tileSize);
   });
 }
