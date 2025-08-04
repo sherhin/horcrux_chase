@@ -3,12 +3,13 @@ import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
-import { updateAndDrawParticles } from './particle.js';
+import { updateAndDrawParticles, particles } from './particle.js';
 import { generateDementors, drawDementors } from './dementor.js';
 
 let canvas, ctx;
-const tileSize = 58;
+let tileSize;
 let assetsLoaded = 0;
+const TOTAL_ASSETS = 12;
 let gameState = 'playing';
 let wallImage, floorImage, harryImage, tomImage;
 let snakeImage, diademImage, diaryImage, locketImage, ringImage
@@ -18,10 +19,44 @@ let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
 
+function resizeCanvas() {
+  const cols = map[0].length;
+  const rows = map.length;
+  const newTileSize = Math.min(window.innerWidth / cols, window.innerHeight / rows);
+  if (tileSize) {
+    const scale = newTileSize / tileSize;
+    if (player.x !== null) {
+      player.x *= scale;
+      player.y *= scale;
+      player.targetX *= scale;
+      player.targetY *= scale;
+    }
+    if (tom.x !== null) {
+      tom.x *= scale;
+      tom.y *= scale;
+      tom.targetX *= scale;
+      tom.targetY *= scale;
+    }
+    particles.forEach(p => {
+      p.x *= scale;
+      p.y *= scale;
+    });
+  }
+  tileSize = newTileSize;
+  canvas.width = tileSize * cols;
+  canvas.height = tileSize * rows;
+  if (assetsLoaded === TOTAL_ASSETS) {
+    draw();
+  }
+}
+
 window.onload = () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
-  restartBtn = document.getElementById('restartBtn'); 
+  restartBtn = document.getElementById('restartBtn');
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
   wallImage = loadImage('./assets/walls.png');
   floorImage = loadImage('./assets/floor.png');
@@ -38,8 +73,7 @@ window.onload = () => {
 
 
   restartBtn.addEventListener('click', () => {
-    player.x = tileSize;
-    player.y = tileSize;
+    player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
     generateDementors(dementorImage, map);
@@ -62,7 +96,7 @@ function loadImage(src) {
 
 function assetLoaded() {
   assetsLoaded++;
-  if (assetsLoaded === 12) {
+  if (assetsLoaded === TOTAL_ASSETS) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
