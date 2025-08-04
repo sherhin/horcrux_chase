@@ -79,3 +79,45 @@ body {
     transform: translateX(-50%) rotate(45deg);
     box-shadow: 0 0 10px rgba(0,0,0,0.25);
 }
+
+#controls {
+    position: absolute;
+    bottom: 5vh;
+    right: 5vw;
+    display: grid;
+    grid-template-columns: repeat(3, 8vh);
+    grid-template-rows: repeat(3, 8vh);
+    gap: 1vh;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+#controls button {
+    width: 8vh;
+    height: 8vh;
+    font-size: 4vh;
+    background-color: #222;
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    border-radius: 8px;
+}
+
+#controls button:active {
+    background-color: #333;
+}
+
+#controls .up {
+    grid-area: 1 / 2;
+}
+
+#controls .left {
+    grid-area: 2 / 1;
+}
+
+#controls .down {
+    grid-area: 3 / 2;
+}
+
+#controls .right {
+    grid-area: 2 / 3;
+}

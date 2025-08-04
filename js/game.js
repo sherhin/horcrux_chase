@@ -5,6 +5,7 @@ import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stop
 import { findPath } from './pathfinding.js';
 import { updateAndDrawParticles } from './particle.js';
 import { generateDementors, drawDementors } from './dementor.js';
+import { initButtonControls } from './ui.js';
 
 let canvas, ctx;
 const tileSize = 58;
@@ -76,6 +77,7 @@ function assetLoaded() {
 
 function setupControls() {
   document.addEventListener('keydown', onKey);
+  initButtonControls(onKey);
 
   let startX, startY;
 
