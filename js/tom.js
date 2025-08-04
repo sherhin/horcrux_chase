@@ -68,3 +68,15 @@ export function updateSpeechPosition(canvas, tileSize) {
     div.style.left = `${sx}px`;
     div.style.top = `${sy}px`;
 }
+
+export function stopTomSpeech() {
+    const div = document.getElementById('tomSpeech');
+    if (div) {
+        div.style.display = 'none';
+    }
+    if (speechTimer) {
+        clearTimeout(speechTimer);
+        speechTimer = null;
+    }
+    speaking = false;
+}
