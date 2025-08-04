@@ -63,7 +63,10 @@ export function moveTom(path, tileSize, steps = 1) {
 }
 
 export function drawTom(ctx, tileSize) {
-    ctx.drawImage(tom.image, tom.x, tom.y, tileSize * 1.4, tileSize * 1.4);
+    const size = tileSize * 1.4;
+    const offsetX = (size - tileSize) / 2;
+    const offsetY = size - tileSize;
+    ctx.drawImage(tom.image, tom.x - offsetX, tom.y - offsetY, size, size);
 }
 
 export function sayTomQuote() {
@@ -85,8 +88,10 @@ export function sayTomQuote() {
 export function updateSpeechPosition(canvas, tileSize) {
     if (!speaking) return;
     const rect = canvas.getBoundingClientRect();
+    const size = tileSize * 1.4;
+    const offsetY = size - tileSize;
     let sx = rect.left + tom.x + tileSize / 2;
-    let sy = rect.top + tom.y - 40; // чуть выше
+    let sy = rect.top + tom.y - offsetY - 40; // чуть выше
     const div = document.getElementById('tomSpeech');
     const width = div.offsetWidth;
     const height = div.offsetHeight;
