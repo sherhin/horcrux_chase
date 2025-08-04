@@ -1,7 +1,7 @@
 import { map, drawMap } from './map.js';
 import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
-import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition } from './tom.js';
+import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
 
 let canvas, ctx;
@@ -41,9 +41,7 @@ window.onload = () => {
     gameState = 'playing';
     restartBtn.style.display = 'none';
 
-    // Скрываем фразу Тома если он говорит
-    const tomSpeech = document.getElementById('tomSpeech');
-    tomSpeech.style.display = 'none';
+    stopTomSpeech();
 
   draw();
 });
@@ -133,9 +131,11 @@ function draw() {
 
 
   if (gameState === 'win') {
+    stopTomSpeech();
     ctx.drawImage(winImage, 0, 0, canvas.width, canvas.height);
     restartBtn.style.display = 'block';
   } else if (gameState === 'lose') {
+    stopTomSpeech();
     ctx.drawImage(loseImage, 0, 0, canvas.width, canvas.height);
     restartBtn.style.display = 'block';
   } else {
