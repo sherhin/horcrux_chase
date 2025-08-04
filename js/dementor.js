@@ -20,3 +20,7 @@ export function drawDementors(ctx, tileSize) {
     ctx.drawImage(d.image, d.x * tileSize, d.y * tileSize, tileSize, tileSize);
   });
 }
+
+export function getDementors() {
+  return dementors;
+}
