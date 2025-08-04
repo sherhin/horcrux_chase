@@ -20,6 +20,9 @@ export const player = {
     if (map[row]?.[col] === 0) {
       const px = this.x + tileSize / 2;
       const py = this.y + tileSize / 2;
+      this.x = nx;
+      this.y = ny;
+      spawnParticles(px, py, 'harry', dx, dy);
       this.targetX = nx;
       this.targetY = ny;
       this.isMoving = true;
@@ -42,7 +45,7 @@ export const player = {
         }
       };
       requestAnimationFrame(animate);
-      spawnParticles(px, py, 'harry');
+
       return { col, row };
     }
     return null;

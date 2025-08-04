@@ -1,5 +1,5 @@
 export class Particle {
-  constructor(x, y, vx, vy, color, lifetime = 60) {
+  constructor(x, y, vx, vy, color, lifetime = 60, radius = 3) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -8,6 +8,7 @@ export class Particle {
     this.lifetime = lifetime;
     this.alpha = 1;
     this.initialLife = lifetime;
+    this.radius = radius;
   }
 
   update() {
@@ -22,7 +23,7 @@ export class Particle {
     ctx.globalAlpha = this.alpha;
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -30,15 +31,17 @@ export class Particle {
 
 export const particles = [];
 
-export function spawnParticles(x, y, character) {
+export function spawnParticles(x, y, character, dx = 0, dy = 0) {
   const colors = character === 'tom' ? ['green', 'silver'] : ['red', 'gold'];
-  for (let i = 0; i < 8; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 2 + 0.5;
-    const vx = Math.cos(angle) * speed;
-    const vy = Math.sin(angle) * speed;
+  const mag = Math.sqrt(dx * dx + dy * dy) || 1;
+  const dirX = dx / mag;
+  const dirY = dy / mag;
+  for (let i = 0; i < 4; i++) {
+    const speed = Math.random() * 0.5 + 0.1;
+    const vx = -dirX * speed + (Math.random() - 0.5) * 0.2;
+    const vy = -dirY * speed + (Math.random() - 0.5) * 0.2;
     const color = colors[Math.floor(Math.random() * colors.length)];
-    particles.push(new Particle(x, y, vx, vy, color));
+    particles.push(new Particle(x, y, vx, vy, color, 40, 2));
   }
 }
 
