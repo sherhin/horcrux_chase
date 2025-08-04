@@ -99,3 +99,7 @@ export function drawDementors(ctx, tileSize) {
     ctx.drawImage(d.image, d.x, d.y, tileSize, tileSize);
   });
 }
+
+export function getDementors() {
+  return dementors;
+}
