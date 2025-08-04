@@ -23,6 +23,7 @@ const tomSpeed = 1;
 function resizeCanvas() {
   const cols = map[0].length;
   const rows = map.length;
+  const dpr = window.devicePixelRatio || 1;
   const newTileSize = Math.min(window.innerWidth / cols, window.innerHeight / rows);
   if (tileSize) {
     const scale = newTileSize / tileSize;
@@ -44,8 +45,11 @@ function resizeCanvas() {
     });
   }
   tileSize = newTileSize;
-  canvas.width = tileSize * cols;
-  canvas.height = tileSize * rows;
+  canvas.style.width = `${tileSize * cols}px`;
+  canvas.style.height = `${tileSize * rows}px`;
+  canvas.width = tileSize * cols * dpr;
+  canvas.height = tileSize * rows * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (assetsLoaded === TOTAL_ASSETS) {
     draw();
   }
