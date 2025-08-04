@@ -83,20 +83,21 @@ body {
 #controls {
     position: absolute;
     bottom: 5vh;
-    right: 5vw;
+    left: 50%;
+    transform: translateX(-50%);
     display: grid;
-    grid-template-columns: repeat(3, 8vh);
-    grid-template-rows: repeat(3, 8vh);
+    grid-template-columns: repeat(3, 6vh);
+    grid-template-rows: repeat(3, 6vh);
     gap: 1vh;
     touch-action: manipulation;
     user-select: none;
 }
 
 #controls button {
-    width: 8vh;
-    height: 8vh;
-    font-size: 4vh;
-    background-color: #222;
+    width: 6vh;
+    height: 6vh;
+    font-size: 3vh;
+    background-color: rgba(34,34,34,0.5);
     border: 2px solid #d4af37;
     color: #d4af37;
     border-radius: 8px;
