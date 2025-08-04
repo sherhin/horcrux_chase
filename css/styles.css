@@ -15,14 +15,15 @@ body {
     background-color: #000;
 }
 
+/* Restart button styling */
 #restartBtn {
     display: none;
     position: absolute;
-    top: 50%;
+    top: 70%; /* place lower on the screen */
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 12px 48px 12px 72px;
-    font-size: 18px;
+    padding: 20px 80px 20px 120px; /* wider and taller */
+    font-size: 24px; /* larger text */
     font-family: inherit;
     cursor: pointer;
     z-index: 10;
@@ -32,8 +33,8 @@ body {
     border-radius: 8px;
     background-image: url('../assets/ring.png');
     background-repeat: no-repeat;
-    background-size: 32px 32px;
-    background-position: 20px center;
+    background-size: 48px 48px; /* enlarge icon */
+    background-position: 32px center; /* adjust icon placement */
     transition: background-color 0.3s, transform 0.3s;
 }
 
