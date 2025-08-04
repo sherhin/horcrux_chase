@@ -197,13 +197,17 @@ function draw() {
   updateSpeechPosition(canvas, tileSize);
 
 
+  const dpr = window.devicePixelRatio || 1;
+  const displayWidth = canvas.width / dpr;
+  const displayHeight = canvas.height / dpr;
+
   if (gameState === 'win') {
     stopTomSpeech();
-    ctx.drawImage(winImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(winImage, 0, 0, displayWidth, displayHeight);
     restartBtn.style.display = 'block';
   } else if (gameState === 'lose') {
     stopTomSpeech();
-    ctx.drawImage(loseImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(loseImage, 0, 0, displayWidth, displayHeight);
     restartBtn.style.display = 'block';
   } else {
     restartBtn.style.display = 'none';
