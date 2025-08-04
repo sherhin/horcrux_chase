@@ -80,7 +80,11 @@ window.onload = () => {
   restartBtn.addEventListener('click', () => {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
-    generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
+    generateHorcruxes(
+      [snakeImage, diademImage, diaryImage, locketImage, ringImage],
+      map,
+      [{ x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) }]
+    );
     generateDementors(dementorImage, map, tileSize);
 
     gameState = 'playing';
@@ -104,7 +108,11 @@ function assetLoaded() {
   if (assetsLoaded === TOTAL_ASSETS) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
-    generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
+    generateHorcruxes(
+      [snakeImage, diademImage, diaryImage, ringImage, locketImage],
+      map,
+      [{ x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) }]
+    );
     generateDementors(dementorImage, map, tileSize);
     setupControls();
     startTomLoop();
