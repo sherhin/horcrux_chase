@@ -70,6 +70,28 @@ function assetLoaded() {
 
 function setupControls() {
   document.addEventListener('keydown', onKey);
+
+  let startX, startY;
+
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      onKey({ key: dx > 0 ? 'ArrowRight' : 'ArrowLeft' });
+    } else {
+      onKey({ key: dy > 0 ? 'ArrowDown' : 'ArrowUp' });
+    }
+  }, { passive: false });
 }
 
 function onKey(e) {
