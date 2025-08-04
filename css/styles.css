@@ -20,11 +20,11 @@ body {
 #restartBtn {
     display: none;
     position: absolute;
-    top: 70%; /* place lower on the screen */
+    top: 60vh; /* place lower on the screen using viewport units */
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px 80px 20px 120px; /* wider and taller */
-    font-size: 24px; /* larger text */
+    padding: 2vh 8vw 2vh 12vw; /* wider and taller */
+    font-size: 3vh; /* larger text */
     font-family: inherit;
     cursor: pointer;
     z-index: 10;
@@ -34,9 +34,19 @@ body {
     border-radius: 8px;
     background-image: url('../assets/ring.png');
     background-repeat: no-repeat;
-    background-size: 48px 48px; /* enlarge icon */
-    background-position: 32px center; /* adjust icon placement */
+    background-size: 6vh 6vh; /* enlarge icon */
+    background-position: 3vw center; /* adjust icon placement */
     transition: background-color 0.3s, transform 0.3s;
+}
+
+@media (max-width: 600px) {
+    #restartBtn {
+        top: 55vh;
+        padding: 2vh 10vw 2vh 16vw;
+        font-size: 2.5vh;
+        background-size: 5vh 5vh;
+        background-position: 5vw center;
+    }
 }
 
 #restartBtn:hover {
