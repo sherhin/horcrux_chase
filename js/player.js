@@ -21,7 +21,14 @@ export const player = {
     const nx = this.x + dx, ny = this.y + dy;
     const col = Math.floor(nx / tileSize), row = Math.floor(ny / tileSize);
     if (map[row]?.[col] === 0) {
-      const occupied = getDementors().some(d => d.x === col && d.y === row);
+      const occupied = getDementors().some(d => {
+        const currentCol = Math.floor(d.x / tileSize);
+        const currentRow = Math.floor(d.y / tileSize);
+        const targetCol = Math.floor((d.isMoving ? d.targetX : d.x) / tileSize);
+        const targetRow = Math.floor((d.isMoving ? d.targetY : d.y) / tileSize);
+        return (currentCol === col && currentRow === row) ||
+               (targetCol === col && targetRow === row);
+      });
       if (occupied) return null;
       const px = this.x + tileSize / 2;
       const py = this.y + tileSize / 2;
