@@ -35,16 +35,16 @@ export const player = {
         spawnParticles(px, py, 'harry', dx, dy);
         return null;
       }
-      const px = this.x + tileSize / 2;
-      const py = this.y + tileSize / 2;
-      this.x = nx;
-      this.y = ny;
+
+      const startX = this.x;
+      const startY = this.y;
+      const px = startX + tileSize / 2;
+      const py = startY + tileSize / 2;
       spawnParticles(px, py, 'harry', dx, dy);
+
       this.targetX = nx;
       this.targetY = ny;
       this.isMoving = true;
-      const startX = this.x;
-      const startY = this.y;
       const startTime = performance.now();
       const animate = (time) => {
         const elapsed = time - startTime;
