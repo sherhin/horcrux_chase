@@ -26,9 +26,9 @@ export function initTom(img, tileSize) {
     }
 }
 
-export function moveTom(path, tileSize) {
+export function moveTom(path, tileSize, steps = 1) {
     if (speaking || path.length === 0) return;
-    const step = path[0];
+    const step = path[Math.min(steps - 1, path.length - 1)];
     tom.x = step.col * tileSize;
     tom.y = step.row * tileSize;
 }
