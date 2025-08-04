@@ -30,15 +30,6 @@ export function initTom(img, tileSize) {
 }
 
 export function moveTom(path, tileSize, steps = 1) {
-    if (speaking || path.length === 0) return;
-    const prevX = tom.x + tileSize / 2;
-    const prevY = tom.y + tileSize / 2;
-    const step = path[Math.min(steps - 1, path.length - 1)];
-    tom.x = step.col * tileSize;
-    tom.y = step.row * tileSize;
-    const newX = tom.x + tileSize / 2;
-    const newY = tom.y + tileSize / 2;
-    spawnParticles(prevX, prevY, 'tom', newX - prevX, newY - prevY);
     if (speaking || tom.isMoving || path.length === 0) return;
     const prevX = tom.x + tileSize / 2;
     const prevY = tom.y + tileSize / 2;
@@ -65,6 +56,9 @@ export function moveTom(path, tileSize, steps = 1) {
         }
     };
     requestAnimationFrame(animate);
+    const newX = tom.targetX + tileSize / 2;
+    const newY = tom.targetY + tileSize / 2;
+    spawnParticles(prevX, prevY, 'tom', newX - prevX, newY - prevY);
 }
 
 export function drawTom(ctx, tileSize) {
