@@ -4,6 +4,7 @@ import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horc
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
 import { updateAndDrawParticles } from './particle.js';
+import { generateDementors, drawDementors } from './dementor.js';
 
 let canvas, ctx;
 const tileSize = 58;
@@ -12,6 +13,7 @@ let gameState = 'playing';
 let wallImage, floorImage, harryImage, tomImage;
 let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
+let dementorImage;
 let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
@@ -32,12 +34,15 @@ window.onload = () => {
   locketImage = loadImage('./assets/locket.png')
   winImage = loadImage('./assets/win_screen.png');
   loseImage = loadImage('./assets/lose_screen.png');
+  dementorImage = loadImage('./assets/dementor.png');
+
 
   restartBtn.addEventListener('click', () => {
     player.x = tileSize;
     player.y = tileSize;
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
+    generateDementors([dementorImage], map);
 
     gameState = 'playing';
     restartBtn.style.display = 'none';
@@ -57,10 +62,11 @@ function loadImage(src) {
 
 function assetLoaded() {
   assetsLoaded++;
-  if (assetsLoaded === 11) {
+  if (assetsLoaded === 14) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
+    generateDementors([dementorImage], map);
     setupControls();
     startTomLoop();
     requestAnimationFrame(loop);
@@ -144,6 +150,7 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawMap(ctx, tileSize, wallImage, floorImage);
   drawHorcruxes(ctx, tileSize);
+  drawDementors(ctx, tileSize);
   player.draw(ctx, tileSize);
   drawTom(ctx, tileSize);
   updateAndDrawParticles(ctx);
