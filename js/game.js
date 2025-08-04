@@ -12,6 +12,8 @@ let wallImage, floorImage, harryImage, tomImage;
 let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
 let restartBtn;
+let tomInterval;
+const tomSpeed = 2;
 
 window.onload = () => {
   canvas = document.getElementById('gameCanvas');
@@ -64,6 +66,7 @@ function assetLoaded() {
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
     draw();
     setupControls();
+    startTomLoop();
   }
 }
 
@@ -95,6 +98,17 @@ if (moved) {
   if (allCollected) {
     gameState = 'win';
   }
+  if (tom.x === player.x && tom.y === player.y) {
+    gameState = 'lose';
+  }
+    draw();
+  }
+}
+
+function startTomLoop() {
+  if (tomInterval) clearInterval(tomInterval);
+  tomInterval = setInterval(() => {
+    if (gameState !== 'playing') return;
     const path = findPath(
       Math.floor(tom.x / tileSize),
       Math.floor(tom.y / tileSize),
@@ -102,17 +116,13 @@ if (moved) {
       Math.floor(player.y / tileSize),
       map
     );
-
-    moveTom(path, tileSize);
-
+    moveTom(path, tileSize, tomSpeed);
     if (tom.x === player.x && tom.y === player.y) {
       gameState = 'lose';
     }
-
     draw();
-  }
+  }, 300);
 }
-
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawMap(ctx, tileSize, wallImage, floorImage);
