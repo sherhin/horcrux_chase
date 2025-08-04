@@ -17,6 +17,13 @@ export function initTom(img, tileSize) {
     tom.image = img;
     tom.x = 10 * tileSize;
     tom.y = 2 * tileSize;
+
+    // Reset speech state so Tom can move immediately after a restart
+    speaking = false;
+    if (speechTimer) {
+        clearTimeout(speechTimer);
+        speechTimer = null;
+    }
 }
 
 export function moveTom(path, tileSize) {
