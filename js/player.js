@@ -1,5 +1,7 @@
 import { spawnParticles } from './particle.js';
 
+const MOVE_DURATION = 100;
+
 export const player = {
   x: null,
   y: null,
@@ -26,14 +28,12 @@ export const player = {
       const startX = this.x;
       const startY = this.y;
       const startTime = performance.now();
-      const duration = 200;
       const animate = (time) => {
         const elapsed = time - startTime;
-        let t = Math.min(elapsed / duration, 1);
-        t = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const t = Math.min(elapsed / MOVE_DURATION, 1);
         this.x = startX + (this.targetX - startX) * t;
         this.y = startY + (this.targetY - startY) * t;
-        if (elapsed < duration) {
+        if (elapsed < MOVE_DURATION) {
           requestAnimationFrame(animate);
         } else {
           this.x = this.targetX;
