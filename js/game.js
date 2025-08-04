@@ -23,7 +23,7 @@ window.onload = () => {
 
   wallImage = loadImage('./assets/walls.png');
   floorImage = loadImage('./assets/floor.png');
-  harryImage = loadImage('./assets/harry1.png');
+  harryImage = loadImage('./assets/harry.png');
   tomImage = loadImage('./assets/tom.png');
   snakeImage = loadImage('./assets/snake.png');
   diademImage = loadImage('./assets/diadem.png');
