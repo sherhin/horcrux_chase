@@ -3,6 +3,7 @@ import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
+import { updateAndDrawParticles } from './particle.js';
 
 let canvas, ctx;
 const tileSize = 58;
@@ -42,9 +43,7 @@ window.onload = () => {
     restartBtn.style.display = 'none';
 
     stopTomSpeech();
-
-  draw();
-});
+  });
 };
 
 
@@ -62,9 +61,9 @@ function assetLoaded() {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
-    draw();
     setupControls();
     startTomLoop();
+    requestAnimationFrame(loop);
   }
 }
 
@@ -99,7 +98,6 @@ if (moved) {
   if (tom.x === player.x && tom.y === player.y) {
     gameState = 'lose';
   }
-    draw();
   }
 }
 
@@ -118,7 +116,6 @@ function startTomLoop() {
     if (tom.x === player.x && tom.y === player.y) {
       gameState = 'lose';
     }
-    draw();
   }, 300);
 }
 function draw() {
@@ -127,6 +124,7 @@ function draw() {
   drawHorcruxes(ctx, tileSize);
   player.draw(ctx, tileSize);
   drawTom(ctx, tileSize);
+  updateAndDrawParticles(ctx);
   updateSpeechPosition(canvas, tileSize);
 
 
@@ -141,5 +139,10 @@ function draw() {
   } else {
     restartBtn.style.display = 'none';
   }
+}
+
+function loop() {
+  draw();
+  requestAnimationFrame(loop);
 }
 

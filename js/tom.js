@@ -1,3 +1,5 @@
+import { spawnParticles } from './particle.js';
+
 export const tom = { x: null, y: null, image: null };
 
 const quotes = [
@@ -28,9 +30,12 @@ export function initTom(img, tileSize) {
 
 export function moveTom(path, tileSize, steps = 1) {
     if (speaking || path.length === 0) return;
+    const prevX = tom.x + tileSize / 2;
+    const prevY = tom.y + tileSize / 2;
     const step = path[Math.min(steps - 1, path.length - 1)];
     tom.x = step.col * tileSize;
     tom.y = step.row * tileSize;
+    spawnParticles(prevX, prevY, 'tom');
 }
 
 export function drawTom(ctx, tileSize) {
