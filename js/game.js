@@ -8,7 +8,8 @@ let canvas, ctx;
 const tileSize = 58;
 let assetsLoaded = 0;
 let gameState = 'playing';
-let wallImage, floorImage, harryImage, snakeImage, diademImage, diaryImage, tomImage;
+let wallImage, floorImage, harryImage, tomImage;
+let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
 let restartBtn;
 
@@ -24,6 +25,8 @@ window.onload = () => {
   snakeImage = loadImage('/assets/snake.png');
   diademImage = loadImage('/assets/diadem.png');
   diaryImage = loadImage('/assets/diary.png');
+  ringImage = loadImage('/assets/ring.png');
+  locketImage = loadImage('/assets/locket.png')
   winImage = loadImage('/assets/win_screen.png');
   loseImage = loadImage('/assets/lose_screen.png');
 
@@ -31,7 +34,7 @@ window.onload = () => {
     player.x = tileSize;
     player.y = tileSize;
     initTom(tomImage, tileSize);
-    generateHorcruxes([snakeImage, diademImage, diaryImage], map);
+    generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
 
     gameState = 'playing';
     restartBtn.style.display = 'none';
@@ -55,10 +58,10 @@ function loadImage(src) {
 
 function assetLoaded() {
   assetsLoaded++;
-  if (assetsLoaded === 9) {
+  if (assetsLoaded === 11) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
-    generateHorcruxes([snakeImage, diademImage, diaryImage], map);
+    generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
     draw();
     setupControls();
   }
