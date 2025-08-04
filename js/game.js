@@ -14,24 +14,24 @@ let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
 let restartBtn;
 let tomInterval;
-const tomSpeed = 2;
+const tomSpeed = 1;
 
 window.onload = () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   restartBtn = document.getElementById('restartBtn'); 
 
-  wallImage = loadImage('/assets/walls.png');
-  floorImage = loadImage('/assets/floor.png');
-  harryImage = loadImage('/assets/harry1.png');
-  tomImage = loadImage('/assets/tom.png');
-  snakeImage = loadImage('/assets/snake.png');
-  diademImage = loadImage('/assets/diadem.png');
-  diaryImage = loadImage('/assets/diary.png');
-  ringImage = loadImage('/assets/ring.png');
-  locketImage = loadImage('/assets/locket.png')
-  winImage = loadImage('/assets/win_screen.png');
-  loseImage = loadImage('/assets/lose_screen.png');
+  wallImage = loadImage('./assets/walls.png');
+  floorImage = loadImage('./assets/floor.png');
+  harryImage = loadImage('./assets/harry.png');
+  tomImage = loadImage('./assets/tom.png');
+  snakeImage = loadImage('./assets/snake.png');
+  diademImage = loadImage('./assets/diadem.png');
+  diaryImage = loadImage('./assets/diary.png');
+  ringImage = loadImage('./assets/ring.png');
+  locketImage = loadImage('./assets/locket.png')
+  winImage = loadImage('./assets/win_screen.png');
+  loseImage = loadImage('./assets/lose_screen.png');
 
   restartBtn.addEventListener('click', () => {
     player.x = tileSize;

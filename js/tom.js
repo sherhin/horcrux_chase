@@ -1,6 +1,6 @@
 import { spawnParticles } from './particle.js';
 
-export const tom = { x: null, y: null, image: null };
+export const tom = { x: null, y: null, targetX: null, targetY: null, isMoving: false, image: null };
 
 const quotes = [
     "Отдай это, Поттер.",
@@ -17,8 +17,9 @@ let speechTimer = null;
 
 export function initTom(img, tileSize) {
     tom.image = img;
-    tom.x = 10 * tileSize;
-    tom.y = 2 * tileSize;
+    tom.x = tom.targetX = 10 * tileSize;
+    tom.y = tom.targetY = 2 * tileSize;
+    tom.isMoving = false;
 
     // Reset speech state so Tom can move immediately after a restart
     speaking = false;
@@ -38,6 +39,32 @@ export function moveTom(path, tileSize, steps = 1) {
     const newX = tom.x + tileSize / 2;
     const newY = tom.y + tileSize / 2;
     spawnParticles(prevX, prevY, 'tom', newX - prevX, newY - prevY);
+    if (speaking || tom.isMoving || path.length === 0) return;
+    const prevX = tom.x + tileSize / 2;
+    const prevY = tom.y + tileSize / 2;
+    const step = path[Math.min(steps - 1, path.length - 1)];
+    tom.targetX = step.col * tileSize;
+    tom.targetY = step.row * tileSize;
+    tom.isMoving = true;
+    const startX = tom.x;
+    const startY = tom.y;
+    const startTime = performance.now();
+    const duration = 200;
+    const animate = (time) => {
+        const elapsed = time - startTime;
+        let t = Math.min(elapsed / duration, 1);
+        t = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        tom.x = startX + (tom.targetX - startX) * t;
+        tom.y = startY + (tom.targetY - startY) * t;
+        if (elapsed < duration) {
+            requestAnimationFrame(animate);
+        } else {
+            tom.x = tom.targetX;
+            tom.y = tom.targetY;
+            tom.isMoving = false;
+        }
+    };
+    requestAnimationFrame(animate);
 }
 
 export function drawTom(ctx, tileSize) {
