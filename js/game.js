@@ -4,7 +4,7 @@ import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horc
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
 import { updateAndDrawParticles, particles } from './particle.js';
-import { generateDementors, drawDementors } from './dementor.js';
+import { generateDementors, drawDementors, updateDementors } from './dementor.js';
 import { initButtonControls } from './ui.js';
 
 let canvas, ctx;
@@ -77,7 +77,7 @@ window.onload = () => {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
-    generateDementors(dementorImage, map);
+    generateDementors(dementorImage, map, tileSize);
 
     gameState = 'playing';
     restartBtn.style.display = 'none';
@@ -101,7 +101,7 @@ function assetLoaded() {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
-    generateDementors(dementorImage, map);
+    generateDementors(dementorImage, map, tileSize);
     setupControls();
     startTomLoop();
     requestAnimationFrame(loop);
@@ -207,6 +207,7 @@ function draw() {
 }
 
 function loop() {
+  updateDementors(tileSize, map);
   draw();
   requestAnimationFrame(loop);
 }
