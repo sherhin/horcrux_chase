@@ -42,7 +42,7 @@ window.onload = () => {
     player.y = tileSize;
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, locketImage, ringImage], map);
-    generateDementors([dementorImage], map);
+    generateDementors(dementorImage, map);
 
     gameState = 'playing';
     restartBtn.style.display = 'none';
@@ -62,11 +62,11 @@ function loadImage(src) {
 
 function assetLoaded() {
   assetsLoaded++;
-  if (assetsLoaded === 14) {
+  if (assetsLoaded === 12) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     generateHorcruxes([snakeImage, diademImage, diaryImage, ringImage, locketImage], map);
-    generateDementors([dementorImage], map);
+    generateDementors(dementorImage, map);
     setupControls();
     startTomLoop();
     requestAnimationFrame(loop);

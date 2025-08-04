@@ -1,6 +1,6 @@
 let dementors = [];
 
-export function generateDementors(template, map) {
+export function generateDementors(image, map) {
   dementors = [];
   let count = 0;
 
@@ -9,7 +9,7 @@ export function generateDementors(template, map) {
     let y = Math.floor(Math.random() * map.length);
 
     if (map[y][x] === 0 && !dementors.some(d => d.x === x && d.y === y)) {
-      dementors.push({ image: template, x, y });
+      dementors.push({ image, x, y });
       count++;
     }
   }
