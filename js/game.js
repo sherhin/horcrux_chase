@@ -14,7 +14,7 @@ let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
 let restartBtn;
 let tomInterval;
-const tomSpeed = 2;
+const tomSpeed = 1;
 
 window.onload = () => {
   canvas = document.getElementById('gameCanvas');
