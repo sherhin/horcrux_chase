@@ -1,6 +1,10 @@
 export let horcruxes = [];
 
-export function generateHorcruxes(templates, map, forbidden = []) {
+function isTooClose(x, y, arr, minDistance) {
+  return arr.some(p => Math.abs(p.x - x) + Math.abs(p.y - y) < minDistance);
+}
+
+export function generateHorcruxes(templates, map, forbidden = [], minDistance = 1) {
   horcruxes = [];
   templates.forEach(img => {
     let x, y;
@@ -9,8 +13,8 @@ export function generateHorcruxes(templates, map, forbidden = []) {
       y = Math.floor(Math.random() * map.length);
     } while (
       map[y][x] !== 0 ||
-      horcruxes.some(h => h.x === x && h.y === y) ||
-      forbidden.some(p => p.x === x && p.y === y)
+      isTooClose(x, y, horcruxes, minDistance) ||
+      isTooClose(x, y, forbidden, minDistance)
     );
     horcruxes.push({ image: img, x, y });
   });

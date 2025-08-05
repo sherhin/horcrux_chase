@@ -19,6 +19,7 @@ let dementorImage;
 let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
+const MIN_DISTANCE = 2;
 
 let winCount = parseInt(sessionStorage.getItem('wins') || '0');
 let loseCount = parseInt(sessionStorage.getItem('losses') || '0');
@@ -105,12 +106,16 @@ window.onload = () => {
   restartBtn.addEventListener('click', () => {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
+    const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, locketImage, ringImage],
       map,
-      [{ x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) }]
+      [startPos],
+      MIN_DISTANCE
     );
-    generateDementors(dementorImage, map, tileSize);
+    const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
+    forbidden.push(startPos);
+    generateDementors(dementorImage, map, tileSize, forbidden, MIN_DISTANCE);
 
     setGameState('playing');
     restartBtn.style.display = 'none';
@@ -133,12 +138,16 @@ function assetLoaded() {
   if (assetsLoaded === TOTAL_ASSETS) {
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
+    const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, ringImage, locketImage],
       map,
-      [{ x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) }]
+      [startPos],
+      MIN_DISTANCE
     );
-    generateDementors(dementorImage, map, tileSize);
+    const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
+    forbidden.push(startPos);
+    generateDementors(dementorImage, map, tileSize, forbidden, MIN_DISTANCE);
     setupControls();
     startTomLoop();
     requestAnimationFrame(loop);
