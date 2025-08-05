@@ -43,7 +43,7 @@ describe('tom character', () => {
     global.requestAnimationFrame = () => {};
     div = { style: { display: 'none' }, innerText: '' };
     global.document = { getElementById: () => div };
-    initTom({}, tileSize);
+    initTom({}, tileSize, 10, 2);
   });
 
   afterEach(() => {
@@ -52,6 +52,12 @@ describe('tom character', () => {
     delete global.requestAnimationFrame;
     delete global.document;
     tom.isMoving = false;
+  });
+
+  it('initializes at provided position', () => {
+    initTom({}, tileSize, 3, 4);
+    assert.equal(tom.x, 3 * tileSize);
+    assert.equal(tom.y, 4 * tileSize);
   });
 
   it('does not move when speaking is true', () => {

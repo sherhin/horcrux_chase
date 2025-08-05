@@ -10,10 +10,10 @@ export const player = {
   targetY: null,
   isMoving: false,
   image: null,
-  init(img, tileSize) {
+  init(img, tileSize, startCol = 1, startRow = 1) {
     this.image = img;
-    this.x = this.targetX = tileSize;
-    this.y = this.targetY = tileSize;
+    this.x = this.targetX = startCol * tileSize;
+    this.y = this.targetY = startRow * tileSize;
     this.isMoving = false;
   },
   move(dx, dy, tileSize, map) {

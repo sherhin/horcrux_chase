@@ -16,10 +16,10 @@ const quotes = [
 let speaking = false;
 let speechTimer = null;
 
-export function initTom(img, tileSize) {
+export function initTom(img, tileSize, startCol = 10, startRow = 2) {
     tom.image = img;
-    tom.x = tom.targetX = 10 * tileSize;
-    tom.y = tom.targetY = 2 * tileSize;
+    tom.x = tom.targetX = startCol * tileSize;
+    tom.y = tom.targetY = startRow * tileSize;
     tom.isMoving = false;
 
     // Reset speech state so Tom can move immediately after a restart

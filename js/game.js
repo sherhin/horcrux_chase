@@ -1,4 +1,4 @@
-import { map, drawMap } from './map.js';
+import { generateMap, drawMap } from './map.js';
 import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
@@ -20,6 +20,9 @@ let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
 const MIN_DISTANCE = 2;
+let map;
+let harryStart;
+let tomStart;
 
 let winCount = parseInt(sessionStorage.getItem('wins') || '0');
 let loseCount = parseInt(sessionStorage.getItem('losses') || '0');
@@ -41,6 +44,22 @@ function setGameState(state) {
     sessionStorage.setItem('losses', loseCount);
   }
   updateScoreboard();
+}
+
+function generateLevel() {
+  while (true) {
+    const newMap = generateMap();
+    const h = { col: 1, row: 1 };
+    const t = { col: newMap[0].length - 2, row: newMap.length - 2 };
+    if (newMap[h.row][h.col] !== 0) continue;
+    if (newMap[t.row][t.col] !== 0) continue;
+    const path = findPath(t.col, t.row, h.col, h.row, newMap);
+    if (path.length === 0) continue;
+    map = newMap;
+    harryStart = h;
+    tomStart = t;
+    break;
+  }
 }
 
 function resizeCanvas() {
@@ -86,6 +105,7 @@ window.onload = () => {
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
 
+  generateLevel();
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
@@ -104,9 +124,11 @@ window.onload = () => {
 
 
   restartBtn.addEventListener('click', () => {
-    player.init(harryImage, tileSize);
-    initTom(tomImage, tileSize);
-    const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
+    generateLevel();
+    resizeCanvas();
+    player.init(harryImage, tileSize, harryStart.col, harryStart.row);
+    initTom(tomImage, tileSize, tomStart.col, tomStart.row);
+    const startPos = { x: harryStart.col, y: harryStart.row };
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, locketImage, ringImage],
       map,
@@ -136,9 +158,9 @@ function loadImage(src) {
 function assetLoaded() {
   assetsLoaded++;
   if (assetsLoaded === TOTAL_ASSETS) {
-    player.init(harryImage, tileSize);
-    initTom(tomImage, tileSize);
-    const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
+    player.init(harryImage, tileSize, harryStart.col, harryStart.row);
+    initTom(tomImage, tileSize, tomStart.col, tomStart.row);
+    const startPos = { x: harryStart.col, y: harryStart.row };
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, ringImage, locketImage],
       map,
@@ -256,7 +278,7 @@ function checkDementorCollision() {
 }
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawMap(ctx, tileSize, wallImage, floorImage);
+  drawMap(ctx, tileSize, wallImage, floorImage, map);
   drawHorcruxes(ctx, tileSize);
   drawDementors(ctx, tileSize);
   player.draw(ctx, tileSize);
