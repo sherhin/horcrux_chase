@@ -18,7 +18,7 @@ let winImage, loseImage;
 let dementorImage;
 let restartBtn;
 let tomInterval;
-const tomSpeed = 1;
+const tomSpeed = 0.8;
 const MIN_DISTANCE = 2;
 const MAP_WIDTH = 12;
 const MAP_HEIGHT = 15;
