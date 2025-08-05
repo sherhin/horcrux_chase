@@ -18,8 +18,12 @@ export const player = {
   },
   move(dx, dy, tileSize, map) {
     if (this.isMoving) return null;
-    const nx = this.x + dx, ny = this.y + dy;
-    const col = Math.floor(nx / tileSize), row = Math.floor(ny / tileSize);
+    const tentativeX = this.x + dx;
+    const tentativeY = this.y + dy;
+    const col = Math.round(tentativeX / tileSize);
+    const row = Math.round(tentativeY / tileSize);
+    const nx = col * tileSize;
+    const ny = row * tileSize;
     if (map[row]?.[col] === 0) {
       const occupied = getDementors().some(d => {
         const currentCol = Math.floor(d.x / tileSize);
