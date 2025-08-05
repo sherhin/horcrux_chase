@@ -39,6 +39,50 @@ test('generateDementors creates three dementors on free tiles without overlap', 
   }
 });
 
+test('generateDementors places dementors only on tiles with a free neighbor', () => {
+  const originalRandom = Math.random;
+  const originalNow = performance.now;
+
+  try {
+    const randomValues = [0, 0, 0.3, 0.3, 0.6, 0.3, 0.3, 0.6];
+    let randIndex = 0;
+    Math.random = () => randomValues[randIndex++];
+
+    const perfValues = [0, 0, 0];
+    let perfIndex = 0;
+    performance.now = () => perfValues[perfIndex++];
+
+    const map = [
+      [0, 1, 1, 1],
+      [1, 0, 0, 1],
+      [1, 0, 1, 1],
+      [1, 1, 1, 1]
+    ];
+    const tileSize = 10;
+    const image = {};
+
+    generateDementors(image, map, tileSize);
+    const dementors = getDementors();
+
+    assert.equal(dementors.length, 3);
+    const dirs = [
+      [0, -1],
+      [0, 1],
+      [-1, 0],
+      [1, 0]
+    ];
+    dementors.forEach(d => {
+      const col = d.x / tileSize;
+      const row = d.y / tileSize;
+      const hasNeighbor = dirs.some(([dx, dy]) => map[row + dy]?.[col + dx] === 0);
+      assert.ok(hasNeighbor);
+    });
+  } finally {
+    Math.random = originalRandom;
+    performance.now = originalNow;
+  }
+});
+
 test('generateDementors respects forbidden positions and minDistance', () => {
   const originalRandom = Math.random;
   const originalNow = performance.now;

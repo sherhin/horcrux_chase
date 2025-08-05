@@ -16,6 +16,16 @@ function isTooClosePoints(col, row, points, minDistance) {
   return points.some(p => Math.abs(p.x - col) + Math.abs(p.y - row) < minDistance);
 }
 
+function hasFreeNeighbor(col, row, map) {
+  const dirs = [
+    { dx: 0, dy: -1 },
+    { dx: 0, dy: 1 },
+    { dx: -1, dy: 0 },
+    { dx: 1, dy: 0 }
+  ];
+  return dirs.some(dir => map[row + dir.dy]?.[col + dir.dx] === 0);
+}
+
 export function generateDementors(image, map, tileSize, forbidden = [], minDistance = 1) {
   dementors = [];
   let count = 0;
@@ -29,6 +39,7 @@ export function generateDementors(image, map, tileSize, forbidden = [], minDista
 
     if (
       map[row][col] === 0 &&
+      hasFreeNeighbor(col, row, map) &&
       !isTooClose(col, row, dementors, minDistance, tileSize) &&
       !isTooClosePoints(col, row, forbidden, minDistance)
     ) {
