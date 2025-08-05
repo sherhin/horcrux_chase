@@ -53,8 +53,9 @@ export const player = {
       const animate = (time) => {
         const elapsed = time - startTime;
         const t = Math.min(elapsed / MOVE_DURATION, 1);
-        this.x = startX + (this.targetX - startX) * t;
-        this.y = startY + (this.targetY - startY) * t;
+        const eased = t * t * (3 - 2 * t); // smoothstep easing for smoother motion
+        this.x = startX + (this.targetX - startX) * eased;
+        this.y = startY + (this.targetY - startY) * eased;
         if (elapsed < MOVE_DURATION) {
           requestAnimationFrame(animate);
         } else {
