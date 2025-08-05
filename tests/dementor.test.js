@@ -4,7 +4,7 @@ import { generateDementors, updateDementors, getDementors } from '../js/dementor
 
 test('generateDementors creates three dementors on free tiles without overlap', () => {
   const originalRandom = Math.random;
-  const originalNow = performance.now;
+  const originalPerformance = globalThis.performance;
 
   try {
     const randomValues = [0, 0, 0.4, 0, 0.8, 0];
@@ -13,7 +13,10 @@ test('generateDementors creates three dementors on free tiles without overlap', 
 
     const perfValues = [0, 0, 0];
     let perfIndex = 0;
-    performance.now = () => perfValues[perfIndex++];
+    const mockPerformance = {
+      now: () => perfValues[perfIndex++]
+    };
+    Object.defineProperty(globalThis, 'performance', { value: mockPerformance, configurable: true });
 
     const map = [
       [0, 0, 0],
@@ -35,13 +38,13 @@ test('generateDementors creates three dementors on free tiles without overlap', 
     });
   } finally {
     Math.random = originalRandom;
-    performance.now = originalNow;
+    Object.defineProperty(globalThis, 'performance', { value: originalPerformance, configurable: true });
   }
 });
 
 test('generateDementors places dementors only on tiles with a free neighbor', () => {
   const originalRandom = Math.random;
-  const originalNow = performance.now;
+  const originalPerformance = globalThis.performance;
 
   try {
     const randomValues = [0, 0, 0.3, 0.3, 0.6, 0.3, 0.3, 0.6];
@@ -50,7 +53,10 @@ test('generateDementors places dementors only on tiles with a free neighbor', ()
 
     const perfValues = [0, 0, 0];
     let perfIndex = 0;
-    performance.now = () => perfValues[perfIndex++];
+    const mockPerformance = {
+      now: () => perfValues[perfIndex++]
+    };
+    Object.defineProperty(globalThis, 'performance', { value: mockPerformance, configurable: true });
 
     const map = [
       [0, 1, 1, 1],
@@ -79,13 +85,13 @@ test('generateDementors places dementors only on tiles with a free neighbor', ()
     });
   } finally {
     Math.random = originalRandom;
-    performance.now = originalNow;
+    Object.defineProperty(globalThis, 'performance', { value: originalPerformance, configurable: true });
   }
 });
 
 test('generateDementors respects forbidden positions and minDistance', () => {
   const originalRandom = Math.random;
-  const originalNow = performance.now;
+  const originalPerformance = globalThis.performance;
 
   try {
     const randomValues = [0, 0, 0.5, 0.5, 0, 0.4, 0.8, 0.8, 0, 0, 0.8, 0.4, 0.8, 0];
@@ -94,7 +100,10 @@ test('generateDementors respects forbidden positions and minDistance', () => {
 
     const perfValues = [0, 0, 0];
     let perfIndex = 0;
-    performance.now = () => perfValues[perfIndex++];
+    const mockPerformance = {
+      now: () => perfValues[perfIndex++]
+    };
+    Object.defineProperty(globalThis, 'performance', { value: mockPerformance, configurable: true });
 
     const map = [
       [0, 0, 0],
@@ -123,13 +132,13 @@ test('generateDementors respects forbidden positions and minDistance', () => {
     }
   } finally {
     Math.random = originalRandom;
-    performance.now = originalNow;
+    Object.defineProperty(globalThis, 'performance', { value: originalPerformance, configurable: true });
   }
 });
 
 test('updateDementors moves dementors to adjacent free cells without collisions after 1000ms', () => {
   const originalRandom = Math.random;
-  const originalNow = performance.now;
+  const originalPerformance = globalThis.performance;
   const originalRAF = global.requestAnimationFrame;
 
   try {
@@ -140,10 +149,13 @@ test('updateDementors moves dementors to adjacent free cells without collisions 
     const perfValues = [0, 0, 0, 1000, 1000, 1600, 1000, 1600, 1000, 1600];
     let perfIndex = 0;
     let lastPerf = 0;
-    performance.now = () => {
-      lastPerf = perfValues[perfIndex++];
-      return lastPerf;
+    const mockPerformance = {
+      now: () => {
+        lastPerf = perfValues[perfIndex++];
+        return lastPerf;
+      }
     };
+    Object.defineProperty(globalThis, 'performance', { value: mockPerformance, configurable: true });
     global.requestAnimationFrame = (cb) => cb(lastPerf + 600);
 
     const map = [
@@ -171,7 +183,7 @@ test('updateDementors moves dementors to adjacent free cells without collisions 
     });
   } finally {
     Math.random = originalRandom;
-    performance.now = originalNow;
+    Object.defineProperty(globalThis, 'performance', { value: originalPerformance, configurable: true });
     global.requestAnimationFrame = originalRAF;
   }
 });
