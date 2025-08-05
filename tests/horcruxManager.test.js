@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateHorcruxes, horcruxes, checkPickup } from '../js/horcruxManager.js';
+import { findPath } from '../js/pathfinding.js';
 
 test('generateHorcruxes places horcruxes only on free tiles without duplicates', () => {
-  const sequence = [0.5, 0.1, 0, 0, 0, 0, 0.4, 0.5, 0.8, 0.4];
+  const sequence = [0.5, 0.1, 0, 0, 0, 0, 0.4, 0.5, 0.8, 0.4, 0.5, 0.9];
   let index = 0;
   const originalRandom = Math.random;
   Math.random = () => sequence[index++];
@@ -15,7 +16,7 @@ test('generateHorcruxes places horcruxes only on free tiles without duplicates',
     [1, 0, 0]
   ];
 
-  generateHorcruxes(templates, map);
+  generateHorcruxes(templates, map, { x: 0, y: 0 });
   Math.random = originalRandom;
 
   for (const h of horcruxes) {
@@ -27,7 +28,7 @@ test('generateHorcruxes places horcruxes only on free tiles without duplicates',
 });
 
 test('generateHorcruxes respects forbidden positions and minDistance', () => {
-  const sequence = [0, 0, 0.5, 0.5, 0, 0.4, 0.8, 0.9];
+  const sequence = [0, 0, 0.5, 0.5, 0, 0.4, 0.8, 0.9, 0.3, 0.9];
   let index = 0;
   const originalRandom = Math.random;
   Math.random = () => sequence[index++];
@@ -40,7 +41,7 @@ test('generateHorcruxes respects forbidden positions and minDistance', () => {
   ];
 
   const forbidden = [{ x: 1, y: 1 }];
-  generateHorcruxes(templates, map, forbidden, 2);
+  generateHorcruxes(templates, map, { x: 0, y: 0 }, forbidden, 2);
   Math.random = originalRandom;
 
   assert.equal(horcruxes.length, 2);
@@ -51,6 +52,29 @@ test('generateHorcruxes respects forbidden positions and minDistance', () => {
   const [h1, h2] = horcruxes;
   const dist = Math.abs(h1.x - h2.x) + Math.abs(h1.y - h2.y);
   assert.ok(dist >= 2);
+});
+
+test('generateHorcruxes ensures each horcrux is reachable from start', () => {
+  const sequence = [0.6, 0.1, 0.1, 0.9, 0.8, 0.9];
+  let index = 0;
+  const originalRandom = Math.random;
+  Math.random = () => sequence[index++];
+
+  const templates = [{ id: 1 }, { id: 2 }];
+  const map = [
+    [0, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 0, 0]
+  ];
+  const startPos = { x: 0, y: 0 };
+
+  generateHorcruxes(templates, map, startPos);
+  Math.random = originalRandom;
+
+  horcruxes.forEach(h => {
+    const path = findPath(startPos.x, startPos.y, h.x, h.y, map);
+    assert.ok(path.length > 0);
+  });
 });
 
 test('checkPickup removes horcrux, calls callback and returns true when empty', () => {
