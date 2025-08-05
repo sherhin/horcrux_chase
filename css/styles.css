@@ -16,6 +16,15 @@ body {
     touch-action: none;
 }
 
+#scoreboard {
+    position: absolute;
+    top: 1vh;
+    left: 1vw;
+    color: #d4af37;
+    font-size: 2vh;
+    z-index: 20;
+}
+
 /* Restart button styling */
 #restartBtn {
     display: none;

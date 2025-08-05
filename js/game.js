@@ -20,6 +20,28 @@ let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
 
+let winCount = parseInt(sessionStorage.getItem('wins') || '0');
+let loseCount = parseInt(sessionStorage.getItem('losses') || '0');
+let winDisplay, loseDisplay;
+
+function updateScoreboard() {
+  if (winDisplay) winDisplay.textContent = winCount;
+  if (loseDisplay) loseDisplay.textContent = loseCount;
+}
+
+function setGameState(state) {
+  if (gameState === state) return;
+  gameState = state;
+  if (state === 'win') {
+    winCount++;
+    sessionStorage.setItem('wins', winCount);
+  } else if (state === 'lose') {
+    loseCount++;
+    sessionStorage.setItem('losses', loseCount);
+  }
+  updateScoreboard();
+}
+
 function resizeCanvas() {
   const cols = map[0].length;
   const rows = map.length;
@@ -59,6 +81,9 @@ window.onload = () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   restartBtn = document.getElementById('restartBtn');
+  winDisplay = document.getElementById('winCount');
+  loseDisplay = document.getElementById('loseCount');
+  updateScoreboard();
 
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
@@ -87,7 +112,7 @@ window.onload = () => {
     );
     generateDementors(dementorImage, map, tileSize);
 
-    gameState = 'playing';
+    setGameState('playing');
     restartBtn.style.display = 'none';
 
     stopTomSpeech();
@@ -169,10 +194,10 @@ if (moved) {
   });
 
   if (allCollected) {
-    gameState = 'win';
+    setGameState('win');
   }
   if (tom.x === player.x && tom.y === player.y) {
-    gameState = 'lose';
+    setGameState('lose');
   }
   }
 }
@@ -190,7 +215,7 @@ function startTomLoop() {
     );
     moveTom(path, tileSize, tomSpeed);
     if (tom.x === player.x && tom.y === player.y) {
-      gameState = 'lose';
+      setGameState('lose');
     }
   }, 300);
 }
@@ -213,7 +238,7 @@ function checkDementorCollision() {
       if (!activeDementorCollisions.has(d)) {
         activeDementorCollisions.add(d);
         spawnParticles(px, py, 'harry');
-        gameState = 'lose';
+        setGameState('lose');
       }
     } else {
       activeDementorCollisions.delete(d);
