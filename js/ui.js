@@ -4,11 +4,25 @@ export function initButtonControls(onKey) {
   if (!controls) return;
 
   controls.querySelectorAll('button').forEach((btn) => {
+    let interval;
+    const key = btn.dataset.key;
+
+    const clear = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
     btn.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      const key = btn.dataset.key;
+      clear();
       onKey({ key });
+      interval = setInterval(() => onKey({ key }), 100);
     });
+
+    btn.addEventListener('pointerup', clear);
+    btn.addEventListener('pointerleave', clear);
   });
 }
 
