@@ -4,7 +4,19 @@ export function getDementors() {
   return dementors;
 }
 
-export function generateDementors(image, map, tileSize) {
+function isTooClose(col, row, arr, minDistance, tileSize) {
+  return arr.some(d => {
+    const dc = Math.floor(d.x / tileSize);
+    const dr = Math.floor(d.y / tileSize);
+    return Math.abs(dc - col) + Math.abs(dr - row) < minDistance;
+  });
+}
+
+function isTooClosePoints(col, row, points, minDistance) {
+  return points.some(p => Math.abs(p.x - col) + Math.abs(p.y - row) < minDistance);
+}
+
+export function generateDementors(image, map, tileSize, forbidden = [], minDistance = 1) {
   dementors = [];
   let count = 0;
 
@@ -14,9 +26,12 @@ export function generateDementors(image, map, tileSize) {
 
     const px = col * tileSize;
     const py = row * tileSize;
-    const occupied = dementors.some(d => Math.floor(d.x / tileSize) === col && Math.floor(d.y / tileSize) === row);
 
-    if (map[row][col] === 0 && !occupied) {
+    if (
+      map[row][col] === 0 &&
+      !isTooClose(col, row, dementors, minDistance, tileSize) &&
+      !isTooClosePoints(col, row, forbidden, minDistance)
+    ) {
       dementors.push({
         image,
         x: px,

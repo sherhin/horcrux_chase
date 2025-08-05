@@ -39,6 +39,50 @@ test('generateDementors creates three dementors on free tiles without overlap', 
   }
 });
 
+test('generateDementors respects forbidden positions and minDistance', () => {
+  const originalRandom = Math.random;
+  const originalNow = performance.now;
+
+  try {
+    const randomValues = [0, 0, 0.5, 0.5, 0, 0.4, 0.8, 0.8, 0, 0, 0.8, 0.4, 0.8, 0];
+    let randIndex = 0;
+    Math.random = () => randomValues[randIndex++];
+
+    const perfValues = [0, 0, 0];
+    let perfIndex = 0;
+    performance.now = () => perfValues[perfIndex++];
+
+    const map = [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
+    ];
+    const tileSize = 10;
+    const image = {};
+
+    generateDementors(image, map, tileSize, [{ x: 1, y: 1 }], 2);
+    const dementors = getDementors();
+
+    assert.equal(dementors.length, 3);
+    const positions = dementors.map(d => [d.x / tileSize, d.y / tileSize]);
+    positions.forEach(([c, r]) => {
+      const distForbidden = Math.abs(c - 1) + Math.abs(r - 1);
+      assert.ok(distForbidden >= 2);
+    });
+    for (let i = 0; i < positions.length; i++) {
+      for (let j = i + 1; j < positions.length; j++) {
+        const [c1, r1] = positions[i];
+        const [c2, r2] = positions[j];
+        const dist = Math.abs(c1 - c2) + Math.abs(r1 - r2);
+        assert.ok(dist >= 2);
+      }
+    }
+  } finally {
+    Math.random = originalRandom;
+    performance.now = originalNow;
+  }
+});
+
 test('updateDementors moves dementors to adjacent free cells without collisions after 1000ms', () => {
   const originalRandom = Math.random;
   const originalNow = performance.now;
