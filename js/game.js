@@ -187,26 +187,52 @@ function setupControls() {
   initButtonControls(onKey);
 
   let startX, startY;
+  let lastMove = 0;
+  const MOVE_DELAY = 100; // ms
 
-  canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    startX = touch.clientX;
-    startY = touch.clientY;
-  }, { passive: false });
+  canvas.addEventListener(
+    'touchstart',
+    e => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      lastMove = 0;
+    },
+    { passive: false }
+  );
 
-  canvas.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    const touch = e.changedTouches[0];
-    const dx = touch.clientX - startX;
-    const dy = touch.clientY - startY;
+  canvas.addEventListener(
+    'touchmove',
+    e => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const now = Date.now();
+      if (now - lastMove < MOVE_DELAY) return;
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
 
-    if (Math.abs(dx) > Math.abs(dy)) {
-      onKey({ key: dx > 0 ? 'ArrowRight' : 'ArrowLeft' });
-    } else {
-      onKey({ key: dy > 0 ? 'ArrowDown' : 'ArrowUp' });
-    }
-  }, { passive: false });
+      if (Math.abs(dx) > Math.abs(dy)) {
+        onKey({ key: dx > 0 ? 'ArrowRight' : 'ArrowLeft' });
+      } else {
+        onKey({ key: dy > 0 ? 'ArrowDown' : 'ArrowUp' });
+      }
+
+      startX = touch.clientX;
+      startY = touch.clientY;
+      lastMove = now;
+    },
+    { passive: false }
+  );
+
+  canvas.addEventListener(
+    'touchend',
+    () => {
+      startX = null;
+      startY = null;
+    },
+    { passive: false }
+  );
 }
 
 function onKey(e) {
