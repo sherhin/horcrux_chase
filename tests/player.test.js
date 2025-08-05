@@ -41,6 +41,15 @@ beforeEach(async () => {
   dementors = [];
 });
 
+describe('player.init', () => {
+  it('positions player on provided start coordinates', () => {
+    player.init({}, tileSize, 3, 2);
+    assert.strictEqual(player.x, tileSize * 3);
+    assert.strictEqual(player.y, tileSize * 2);
+    assert.strictEqual(player.isMoving, false);
+  });
+});
+
 describe('player.move', () => {
   it('returns null if character already moving', () => {
     player.isMoving = true;
