@@ -100,21 +100,21 @@ body {
 
 #controls {
     position: absolute;
-    bottom: 5vh;
+    bottom: 8vh;
     left: 50%;
     transform: translateX(-50%);
     display: grid;
-    grid-template-columns: repeat(3, 6vh);
-    grid-template-rows: repeat(3, 6vh);
+    grid-template-columns: repeat(3, 7.2vh);
+    grid-template-rows: repeat(3, 7.2vh);
     gap: 1vh;
     touch-action: manipulation;
     user-select: none;
 }
 
 #controls button {
-    width: 6vh;
-    height: 6vh;
-    font-size: 3vh;
+    width: 7.2vh;
+    height: 7.2vh;
+    font-size: 3.6vh;
     background-color: rgba(34,34,34,0.5);
     border: 2px solid #d4af37;
     color: #d4af37;
