@@ -40,7 +40,9 @@ describe('tom character', () => {
 
   beforeEach(() => {
     restoreTimers = setupFakeTimers();
-    global.requestAnimationFrame = () => {};
+    global.requestAnimationFrame = (fn) => {
+      fn(performance.now() + 200);
+    };
     div = { style: { display: 'none' }, innerText: '' };
     global.document = { getElementById: () => div };
     initTom({}, tileSize, 10, 2);
@@ -74,6 +76,12 @@ describe('tom character', () => {
     moveTom([{ col: 11, row: 2 }], tileSize);
     assert.equal(tom.x, initialX);
     assert.equal(tom.y, initialY);
+  });
+
+  it('moves even when steps less than 1', () => {
+    moveTom([{ col: 11, row: 2 }], tileSize, 0.5);
+    assert.equal(tom.x, 11 * tileSize);
+    assert.equal(tom.y, 2 * tileSize);
   });
 
   it('sayTomQuote shows and hides tomSpeech after timeout', () => {
