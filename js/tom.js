@@ -34,7 +34,11 @@ export function moveTom(path, tileSize, steps = 1) {
     if (speaking || tom.isMoving || path.length === 0) return;
     const prevX = tom.x + tileSize / 2;
     const prevY = tom.y + tileSize / 2;
-    const step = path[Math.min(steps - 1, path.length - 1)];
+    const stepIndex = Math.min(
+        Math.max(0, Math.floor(steps) - 1),
+        path.length - 1
+    );
+    const step = path[stepIndex];
     tom.targetX = step.col * tileSize;
     tom.targetY = step.row * tileSize;
     tom.isMoving = true;
