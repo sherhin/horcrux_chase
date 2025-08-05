@@ -1,4 +1,4 @@
-import { map, drawMap } from './map.js';
+import { map, drawMap, generateMap } from './map.js';
 import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
@@ -20,6 +20,8 @@ let restartBtn;
 let tomInterval;
 const tomSpeed = 1;
 const MIN_DISTANCE = 2;
+const MAP_WIDTH = 12;
+const MAP_HEIGHT = 15;
 
 let winCount = parseInt(sessionStorage.getItem('wins') || '0');
 let loseCount = parseInt(sessionStorage.getItem('losses') || '0');
@@ -86,6 +88,7 @@ window.onload = () => {
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
 
+  generateMap(MAP_WIDTH, MAP_HEIGHT);
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
@@ -104,6 +107,8 @@ window.onload = () => {
 
 
   restartBtn.addEventListener('click', () => {
+    generateMap(MAP_WIDTH, MAP_HEIGHT);
+    resizeCanvas();
     player.init(harryImage, tileSize);
     initTom(tomImage, tileSize);
     const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
