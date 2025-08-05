@@ -100,21 +100,20 @@ body {
 
 #controls {
     position: absolute;
-    bottom: 8vh;
-    left: 50%;
-    transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(3, 7.2vh);
-    grid-template-rows: repeat(3, 7.2vh);
-    gap: 1vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     touch-action: manipulation;
     user-select: none;
+    z-index: 30;
 }
 
 #controls button {
-    width: 7.2vh;
-    height: 7.2vh;
-    font-size: 3.6vh;
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    font-size: 5vh;
     background-color: rgba(34,34,34,0.5);
     border: 2px solid #d4af37;
     color: #d4af37;
@@ -126,17 +125,21 @@ body {
 }
 
 #controls .up {
-    grid-area: 1 / 2;
+    top: 2vh;
+    right: 2vh;
 }
 
 #controls .left {
-    grid-area: 2 / 1;
+    top: 2vh;
+    left: 2vh;
 }
 
 #controls .down {
-    grid-area: 3 / 2;
+    bottom: 2vh;
+    left: 2vh;
 }
 
 #controls .right {
-    grid-area: 2 / 3;
+    bottom: 2vh;
+    right: 2vh;
 }
