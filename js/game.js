@@ -51,7 +51,7 @@ function setGameState(state) {
 
 function generateLevel() {
   while (true) {
-    const newMap = generateMap();
+    const newMap = generateMap(MAP_WIDTH, MAP_HEIGHT);
     const h = { col: 1, row: 1 };
     const t = { col: newMap[0].length - 2, row: newMap.length - 2 };
     if (newMap[h.row][h.col] !== 0) continue;
@@ -108,7 +108,7 @@ window.onload = () => {
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
 
-  map = generateMap(MAP_WIDTH, MAP_HEIGHT);
+  generateLevel();
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
@@ -127,11 +127,11 @@ window.onload = () => {
 
 
   restartBtn.addEventListener('click', () => {
-    map = generateMap(MAP_WIDTH, MAP_HEIGHT);
+    generateLevel();
     resizeCanvas();
-    player.init(harryImage, tileSize);
-    initTom(tomImage, tileSize);
-    const startPos = { x: Math.floor(player.x / tileSize), y: Math.floor(player.y / tileSize) };
+    player.init(harryImage, tileSize, harryStart.col, harryStart.row);
+    initTom(tomImage, tileSize, tomStart.col, tomStart.row);
+    const startPos = { x: harryStart.col, y: harryStart.row };
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, locketImage, ringImage],
       map,
