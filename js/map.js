@@ -44,9 +44,18 @@ export function generateMap(width, height) {
     map[2][9] = 0; // path to Tom
     map[2][10] = 0; // Tom
   }
+export function generateMap(rows = 14, cols = 12) {
+  const grid = Array.from({ length: rows }, (_, r) =>
+    Array.from({ length: cols }, (_, c) => {
+      if (r === 0 || c === 0 || r === rows - 1 || c === cols - 1) return 1;
+      return Math.random() < 0.3 ? 1 : 0;
+    })
+  );
+  return grid;
+
 }
 
-export function drawMap(ctx, tileSize, wallImage, floorImage) {
+export function drawMap(ctx, tileSize, wallImage, floorImage, map) {
   for (let row = 0; row < map.length; row++) {
     for (let col = 0; col < map[row].length; col++) {
       const x = col * tileSize;
