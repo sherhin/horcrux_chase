@@ -221,20 +221,24 @@ function onKey(e) {
     default: return; // Ignore other keys
   }
 
-const moved = player.move(dx, dy, tileSize, map);
-if (moved) {
-  const allCollected = checkPickup(moved.col, moved.row, () => {
-    if (gameState === 'playing') {
-      sayTomQuote();
-    }
-  });
+  const moved = player.move(dx, dy, tileSize, map);
+  if (moved) {
+    const allCollected = checkPickup(moved.col, moved.row, () => {
+      if (gameState === 'playing') {
+        sayTomQuote();
+      }
+    });
 
-  if (allCollected) {
-    setGameState('win');
-  }
-  if (tom.x === player.x && tom.y === player.y) {
-    setGameState('lose');
-  }
+    if (allCollected) {
+      setGameState('win');
+    }
+    if (
+      !tom.isMoving &&
+      Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
+      Math.floor(tom.y / tileSize) === Math.floor(player.y / tileSize)
+    ) {
+      setGameState('lose');
+    }
   }
 }
 
@@ -242,6 +246,14 @@ function startTomLoop() {
   if (tomInterval) clearInterval(tomInterval);
   tomInterval = setInterval(() => {
     if (gameState !== 'playing') return;
+    if (
+      !tom.isMoving &&
+      Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
+      Math.floor(tom.y / tileSize) === Math.floor(player.y / tileSize)
+    ) {
+      setGameState('lose');
+      return;
+    }
     const path = findPath(
       Math.floor(tom.x / tileSize),
       Math.floor(tom.y / tileSize),
@@ -250,9 +262,6 @@ function startTomLoop() {
       map
     );
     moveTom(path, tileSize, tomSpeed);
-    if (tom.x === player.x && tom.y === player.y) {
-      setGameState('lose');
-    }
   }, 300);
 }
 
