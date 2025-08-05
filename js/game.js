@@ -110,6 +110,7 @@ window.onload = () => {
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, locketImage, ringImage],
       map,
+      startPos,
       [startPos],
       MIN_DISTANCE
     );
@@ -142,6 +143,7 @@ function assetLoaded() {
     generateHorcruxes(
       [snakeImage, diademImage, diaryImage, ringImage, locketImage],
       map,
+      startPos,
       [startPos],
       MIN_DISTANCE
     );
