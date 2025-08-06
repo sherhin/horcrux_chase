@@ -232,14 +232,15 @@ function setupControls() {
     { passive: false }
   );
 
-  document.querySelectorAll('#controls .control-btn').forEach(btn => {
-    const key = btn.dataset.key;
+  document.querySelectorAll('#dpad .dpad-button').forEach(button => {
+    const dir = button.dataset.dir;
+    const keyMap = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
     const handler = e => {
       e.preventDefault();
-      onKey({ key });
+      onKey({ key: keyMap[dir] });
     };
-    btn.addEventListener('click', handler);
-    btn.addEventListener('touchstart', handler, { passive: false });
+    button.addEventListener('click', handler);
+    button.addEventListener('touchstart', handler, { passive: false });
   });
 }
 
