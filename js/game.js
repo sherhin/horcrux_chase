@@ -68,7 +68,10 @@ function resizeCanvas() {
   const cols = map[0].length;
   const rows = map.length;
   const dpr = window.devicePixelRatio || 1;
-  const newTileSize = Math.min(window.innerWidth / cols, window.innerHeight / rows);
+  const CONTROL_SPACE = 140;
+  const availableWidth = window.innerWidth - CONTROL_SPACE;
+  const availableHeight = window.innerHeight - CONTROL_SPACE;
+  const newTileSize = Math.min(availableWidth / cols, availableHeight / rows);
   if (tileSize) {
     const scale = newTileSize / tileSize;
     if (player.x !== null) {
@@ -235,12 +238,18 @@ function setupControls() {
   document.querySelectorAll('#dpad .dpad-button').forEach(button => {
     const dir = button.dataset.dir;
     const keyMap = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
-    const handler = e => {
+    const start = e => {
       e.preventDefault();
+      button.classList.add('pressed');
       onKey({ key: keyMap[dir] });
     };
-    button.addEventListener('click', handler);
-    button.addEventListener('touchstart', handler, { passive: false });
+    const end = () => {
+      button.classList.remove('pressed');
+    };
+    button.addEventListener('mousedown', start);
+    button.addEventListener('touchstart', start, { passive: false });
+    window.addEventListener('mouseup', end);
+    window.addEventListener('touchend', end);
   });
 }
 
