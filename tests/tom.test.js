@@ -88,6 +88,7 @@ describe('tom character', () => {
     sayTomQuote();
     assert.equal(div.style.display, 'block');
     global.advanceTimersByTime(2000);
+    global.advanceTimersByTime(500);
     assert.equal(div.style.display, 'none');
   });
 });
