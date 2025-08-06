@@ -12,15 +12,19 @@ const quotes = [
     "Я разорву тебя на кусочки, мальчишка.",
 ];
 
-const quoteSounds = [
-    new Audio('/assets/give.mp3'),
-    new Audio('/assets/mercy.mp3'),
-    new Audio('/assets/mine.mp3'),
-    new Audio('/assets/pay.mp3'),
-    new Audio('/assets/why_you_run.mp3'),
-    new Audio('/assets/better.mp3'),
-    new Audio('/assets/cuts.mp3'),
+const quoteSoundPaths = [
+    '/assets/give_me.mp3',
+    '/assets/mercy.mp3',
+    '/assets/mine.mp3',
+    '/assets/pay.mp3',
+    '/assets/why_you_run.mp3',
+    '/assets/better.mp3',
+    '/assets/cuts.mp3',
 ];
+
+const quoteSounds = quoteSoundPaths.map((path) =>
+    typeof Audio !== 'undefined' ? new Audio(path) : { play() {}, currentTime: 0 }
+);
 
 
 let speaking = false;
