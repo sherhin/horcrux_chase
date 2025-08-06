@@ -13,13 +13,13 @@ const quotes = [
 ];
 
 const quoteSoundPaths = [
-    '/assets/give_me.mp3',
-    '/assets/mercy.mp3',
-    '/assets/mine.mp3',
-    '/assets/pay.mp3',
-    '/assets/why_you_run.mp3',
-    '/assets/better.mp3',
-    '/assets/cuts.mp3',
+    './assets/give_me.mp3',
+    './assets/mercy.mp3',
+    './assets/mine.mp3',
+    './assets/pay.mp3',
+    './assets/why_you_run.mp3',
+    './assets/better.mp3',
+    './assets/cuts.mp3',
 ];
 
 const quoteSounds = quoteSoundPaths.map((path) =>
