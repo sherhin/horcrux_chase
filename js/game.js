@@ -68,7 +68,11 @@ function resizeCanvas() {
   const cols = map[0].length;
   const rows = map.length;
   const dpr = window.devicePixelRatio || 1;
-  const newTileSize = Math.min(window.innerWidth / cols, window.innerHeight / rows);
+  const controls = document.getElementById('controls');
+  const controlSize = controls ? controls.offsetWidth : 0;
+  const availableWidth = window.innerWidth - controlSize;
+  const availableHeight = window.innerHeight - controlSize;
+  const newTileSize = Math.min(availableWidth / cols, availableHeight / rows);
   if (tileSize) {
     const scale = newTileSize / tileSize;
     if (player.x !== null) {
@@ -94,6 +98,11 @@ function resizeCanvas() {
   canvas.width = tileSize * cols * dpr;
   canvas.height = tileSize * rows * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const container = document.getElementById('gameContainer');
+  if (controls && container) {
+    container.style.paddingRight = `${controlSize}px`;
+    container.style.paddingBottom = `${controlSize}px`;
+  }
   if (assetsLoaded === TOTAL_ASSETS) {
     draw();
   }
@@ -234,12 +243,21 @@ function setupControls() {
 
   document.querySelectorAll('#controls .control-btn').forEach(btn => {
     const key = btn.dataset.key;
-    const handler = e => {
+    const press = e => {
       e.preventDefault();
+      btn.classList.add('pressed');
       onKey({ key });
     };
-    btn.addEventListener('click', handler);
-    btn.addEventListener('touchstart', handler, { passive: false });
+    const release = e => {
+      e.preventDefault();
+      btn.classList.remove('pressed');
+    };
+    btn.addEventListener('mousedown', press);
+    btn.addEventListener('touchstart', press, { passive: false });
+    btn.addEventListener('mouseup', release);
+    btn.addEventListener('mouseleave', release);
+    btn.addEventListener('touchend', release);
+    btn.addEventListener('touchcancel', release);
   });
 }
 
