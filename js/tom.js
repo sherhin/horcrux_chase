@@ -7,11 +7,21 @@ const quotes = [
     "Ты будешь умолять меня о пощаде!",
     "Это МОЁ!",
     "Ты за это поплатишься.",
-    "Ты думаешь, это поможет сбежать от меня?",
     "Зачем убегать, Гарри?",
     "Я могу предложить тебе кое-что получше.",
     "Я разорву тебя на кусочки, мальчишка.",
 ];
+
+const quoteSounds = [
+    new Audio('/assets/give.mp3'),
+    new Audio('/assets/mercy.mp3'),
+    new Audio('/assets/mine.mp3'),
+    new Audio('/assets/pay.mp3'),
+    new Audio('/assets/why_you_run.mp3'),
+    new Audio('/assets/better.mp3'),
+    new Audio('/assets/cuts.mp3'),
+];
+
 
 let speaking = false;
 let speechTimer = null;
@@ -76,17 +86,36 @@ export function drawTom(ctx, tileSize) {
 export function sayTomQuote() {
     if (speaking) clearTimeout(speechTimer);
 
-    const txt = quotes[Math.floor(Math.random() * quotes.length)];
+    const index = Math.floor(Math.random() * quotes.length); // <-- сохраняем индекс!
+    const txt = quotes[index];
+    const sound = quoteSounds[index];
+
     const div = document.getElementById('tomSpeech');
     div.innerText = txt;
+    div.style.opacity = 0;  // <-- стартовая прозрачность
     div.style.display = 'block';
+
+    // Плавное появление текста
+    setTimeout(() => {
+        div.style.transition = 'opacity 0.5s';
+        div.style.opacity = 1;
+    }, 50);
+
+    // Проигрываем звук
+    sound.currentTime = 0;
+    sound.play();
+
     speaking = true;
 
+    // Скрытие с анимацией
     speechTimer = setTimeout(() => {
-        div.style.display = 'none';
-        speaking = false;
-    }, 2000);
-    
+        div.style.opacity = 0;
+        // Ждём окончания анимации, потом скрываем div
+        setTimeout(() => {
+            div.style.display = 'none';
+            speaking = false;
+        }, 500); // столько же, сколько transition
+    }, 2000); // длительность показа текста
 }
 
 export function updateSpeechPosition(canvas, tileSize) {
