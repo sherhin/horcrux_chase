@@ -1,6 +1,17 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { moveTom, sayTomQuote, initTom, tom, stopTomSpeech } from '../js/tom.js';
+
+// Stub HTMLAudioElement for the Node testing environment before importing the module
+global.Audio = class {
+  constructor() {
+    this.currentTime = 0;
+  }
+  play() {
+    return Promise.resolve();
+  }
+};
+
+const { moveTom, sayTomQuote, initTom, tom, stopTomSpeech } = await import('../js/tom.js');
 
 const tileSize = 32;
 
@@ -88,7 +99,6 @@ describe('tom character', () => {
     sayTomQuote();
     assert.equal(div.style.display, 'block');
     global.advanceTimersByTime(2000);
-    global.advanceTimersByTime(500);
     assert.equal(div.style.display, 'none');
   });
 });
