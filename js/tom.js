@@ -103,7 +103,9 @@ export function sayTomQuote() {
 
     // Проигрываем звук
     sound.currentTime = 0;
-    sound.play();
+    sound
+        .play()
+        .catch(err => console.error('Audio playback failed', err));
 
     speaking = true;
 
