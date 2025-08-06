@@ -98,10 +98,7 @@ describe('tom character', () => {
   it('sayTomQuote shows and hides tomSpeech after timeout', () => {
     sayTomQuote();
     assert.equal(div.style.display, 'block');
-    // run timer for speech display duration
     global.advanceTimersByTime(2000);
-    // run inner timer that hides the speech bubble
-    global.advanceTimersByTime(500);
     assert.equal(div.style.display, 'none');
   });
 });
