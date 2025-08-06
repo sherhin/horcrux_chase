@@ -34,6 +34,41 @@ body {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
+/* On-screen movement controls */
+#controls {
+    position: absolute;
+    bottom: 2vh;
+    right: 2vw;
+    display: grid;
+    grid-template-columns: repeat(3, 10vw);
+    grid-template-rows: repeat(3, 10vw);
+    max-width: 150px;
+    max-height: 150px;
+    gap: 1vw;
+    z-index: 30;
+}
+
+.control-btn {
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    border-radius: 8px;
+    font-size: 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+
+.control-btn.up { grid-column: 2; grid-row: 1; }
+.control-btn.left { grid-column: 1; grid-row: 2; }
+.control-btn.down { grid-column: 2; grid-row: 3; }
+.control-btn.right { grid-column: 3; grid-row: 2; }
+
+.control-btn:active {
+    background-color: #333;
+}
+
 /* Restart button styling */
 #restartBtn {
     display: none;

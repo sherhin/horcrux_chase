@@ -231,6 +231,16 @@ function setupControls() {
     },
     { passive: false }
   );
+
+  document.querySelectorAll('#controls .control-btn').forEach(btn => {
+    const key = btn.dataset.key;
+    const handler = e => {
+      e.preventDefault();
+      onKey({ key });
+    };
+    btn.addEventListener('click', handler);
+    btn.addEventListener('touchstart', handler, { passive: false });
+  });
 }
 
 function onKey(e) {
