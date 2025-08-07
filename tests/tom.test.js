@@ -95,11 +95,12 @@ describe('tom character', () => {
     assert.equal(tom.y, 2 * tileSize);
   });
 
-  it('sayTomQuote shows and hides tomSpeech after timeout', () => {
-    sayTomQuote();
-    assert.equal(div.style.display, 'block');
-    global.advanceTimersByTime(2000);
-    assert.equal(div.style.display, 'none');
+    it('sayTomQuote shows and hides tomSpeech after timeout', () => {
+      sayTomQuote();
+      assert.equal(div.style.display, 'block');
+      global.advanceTimersByTime(2000);
+      global.advanceTimersByTime(500);
+      assert.equal(div.style.display, 'none');
+    });
   });
-});
 

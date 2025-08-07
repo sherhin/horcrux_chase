@@ -14,6 +14,7 @@ let gameState = 'playing';
 let wallImage, floorImage, harryImage, tomImage;
 let snakeImage, diademImage, diaryImage, locketImage, ringImage
 let winImage, loseImage;
+let winSound, loseSound;
 let dementorImage;
 let restartBtn;
 let tomInterval;
@@ -41,9 +42,13 @@ function setGameState(state) {
   if (state === 'win') {
     winCount++;
     sessionStorage.setItem('wins', winCount);
+    winSound.currentTime = 0;
+    winSound.play().catch(() => {});
   } else if (state === 'lose') {
     loseCount++;
     sessionStorage.setItem('losses', loseCount);
+    loseSound.currentTime = 0;
+    loseSound.play().catch(() => {});
   }
   updateScoreboard();
 }
@@ -122,6 +127,12 @@ window.onload = () => {
   locketImage = loadImage('./assets/locket.png')
   winImage = loadImage('./assets/win_screen.png');
   loseImage = loadImage('./assets/lose_screen.png');
+  winSound = typeof Audio !== 'undefined'
+    ? new Audio('./assets/win.mp3')
+    : { play: () => Promise.resolve(), currentTime: 0 };
+  loseSound = typeof Audio !== 'undefined'
+    ? new Audio('./assets/lose.mp3')
+    : { play: () => Promise.resolve(), currentTime: 0 };
   dementorImage = loadImage('./assets/dementor.png');
 
 
