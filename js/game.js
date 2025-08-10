@@ -317,6 +317,8 @@ function checkDementorCollision() {
 
   const playerCol = Math.floor(player.x / tileSize);
   const playerRow = Math.floor(player.y / tileSize);
+  const targetCol = Math.floor(player.targetX / tileSize);
+  const targetRow = Math.floor(player.targetY / tileSize);
   const px = player.x + tileSize / 2;
   const py = player.y + tileSize / 2;
 
@@ -325,10 +327,16 @@ function checkDementorCollision() {
     const dRow = Math.floor(d.y / tileSize);
 
     if (dCol === playerCol && dRow === playerRow) {
-      if (!activeDementorCollisions.has(d)) {
-        activeDementorCollisions.add(d);
-        spawnParticles(px, py, 'harry');
-        setGameState('lose');
+      const playerLeaving =
+        player.isMoving && (targetCol !== playerCol || targetRow !== playerRow);
+      if (!playerLeaving || !d.isMoving) {
+        if (!activeDementorCollisions.has(d)) {
+          activeDementorCollisions.add(d);
+          spawnParticles(px, py, 'harry');
+          setGameState('lose');
+        }
+      } else {
+        activeDementorCollisions.delete(d);
       }
     } else {
       activeDementorCollisions.delete(d);
@@ -364,7 +372,7 @@ function draw() {
 }
 
 function loop() {
-  updateDementors(tileSize, map);
+  updateDementors(tileSize, map, player);
   checkDementorCollision();
   draw();
   requestAnimationFrame(loop);
