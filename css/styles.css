@@ -12,24 +12,36 @@ body {
 
 #start-screen {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    inset: 0;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    background-color: #222;
-    padding: 20px;
-    border: 2px solid #d4af37;
-    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background: radial-gradient(circle, #222 0%, #000 100%);
+    color: #d4af37;
     z-index: 100;
+}
+
+#start-screen h1 {
+    margin: 0;
+    font-size: 2rem;
     color: #d4af37;
 }
 
 #start-screen select,
 #start-screen button {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    background-color: transparent;
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    border-radius: 8px;
+}
+
+#start-screen select:hover,
+#start-screen button:hover {
+    background-color: rgba(212, 175, 55, 0.1);
 }
 
 #gameContainer {
