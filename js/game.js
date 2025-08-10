@@ -127,7 +127,10 @@ function resizeCanvas() {
   const cols = map[0].length;
   const rows = map.length;
   const dpr = window.devicePixelRatio || 1;
-  const newTileSize = Math.min(window.innerWidth / cols, window.innerHeight / rows);
+  const CONTROL_SPACE = 140;
+  const availableWidth = window.innerWidth - CONTROL_SPACE;
+  const availableHeight = window.innerHeight - CONTROL_SPACE;
+  const newTileSize = Math.min(availableWidth / cols, availableHeight / rows);
   if (tileSize) {
     const scale = newTileSize / tileSize;
     if (player.x !== null) {
@@ -350,14 +353,21 @@ function setupControls() {
     { passive: false }
   );
 
-  document.querySelectorAll('#controls .control-btn').forEach(btn => {
-    const key = btn.dataset.key;
-    const handler = e => {
+  document.querySelectorAll('#dpad .dpad-button').forEach(button => {
+    const dir = button.dataset.dir;
+    const keyMap = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
+    const start = e => {
       e.preventDefault();
-      onKey({ key });
+      button.classList.add('pressed');
+      onKey({ key: keyMap[dir] });
     };
-    btn.addEventListener('click', handler);
-    btn.addEventListener('touchstart', handler, { passive: false });
+    const end = () => {
+      button.classList.remove('pressed');
+    };
+    button.addEventListener('mousedown', start);
+    button.addEventListener('touchstart', start, { passive: false });
+    window.addEventListener('mouseup', end);
+    window.addEventListener('touchend', end);
   });
 }
 

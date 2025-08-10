@@ -47,6 +47,8 @@ body {
 #gameContainer {
     position: relative;
     display: inline-block;
+    padding-right: 140px;
+    padding-bottom: 140px;
 }
 
 #gameCanvas {
@@ -69,39 +71,44 @@ body {
 }
 
 /* On-screen movement controls */
-#controls {
+#dpad {
     position: absolute;
-    bottom: 2vh;
-    right: 2vw;
+    bottom: 20px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+    background: #d4af37;
+    border-radius: 50%;
     display: grid;
-    grid-template-columns: repeat(3, 10vw);
-    grid-template-rows: repeat(3, 10vw);
-    max-width: 150px;
-    max-height: 150px;
-    gap: 1vw;
+    grid-template-areas:
+        "up up up"
+        "left . right"
+        "down down down";
+    gap: 5px;
+    opacity: 0.9;
     z-index: 30;
 }
 
-.control-btn {
-    background-color: rgba(0, 0, 0, 0.6);
-    border: 2px solid #d4af37;
-    color: #d4af37;
-    border-radius: 8px;
-    font-size: 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
+.dpad-button {
+    background: transparent;
+    color: #000;
+    text-align: center;
+    line-height: 35px;
+    font-size: 20px;
+    border-radius: 10px;
+    user-select: none;
+    transition: background 0.2s;
 }
 
-.control-btn.up { grid-column: 2; grid-row: 1; }
-.control-btn.left { grid-column: 1; grid-row: 2; }
-.control-btn.down { grid-column: 2; grid-row: 3; }
-.control-btn.right { grid-column: 3; grid-row: 2; }
-
-.control-btn:active {
-    background-color: #333;
+.dpad-button.pressed,
+.dpad-button:active {
+    background: rgba(0,0,0,0.2);
 }
+
+.dpad-button[data-dir="up"] { grid-area: up; }
+.dpad-button[data-dir="left"] { grid-area: left; }
+.dpad-button[data-dir="right"] { grid-area: right; }
+.dpad-button[data-dir="down"] { grid-area: down; }
 
 /* Restart button styling */
 #restartBtn {
