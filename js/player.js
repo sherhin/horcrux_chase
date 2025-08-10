@@ -20,8 +20,8 @@ export const player = {
     if (this.isMoving) return null;
     const tentativeX = this.x + dx;
     const tentativeY = this.y + dy;
-    const col = Math.round(tentativeX / tileSize);
-    const row = Math.round(tentativeY / tileSize);
+    const col = Math.floor(tentativeX / tileSize);
+    const row = Math.floor(tentativeY / tileSize);
     const nx = col * tileSize;
     const ny = row * tileSize;
     if (map[row]?.[col] === 0) {

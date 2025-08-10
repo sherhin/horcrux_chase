@@ -57,7 +57,7 @@ export function generateDementors(image, map, tileSize, forbidden = [], minDista
   }
 }
 
-export function updateDementors(tileSize, map) {
+export function updateDementors(tileSize, map, player) {
   const now = performance.now();
   dementors.forEach(d => {
     if (d.isMoving || now - d.lastMoveTime < 1000) return;
@@ -76,11 +76,22 @@ export function updateDementors(tileSize, map) {
 
     const col = Math.floor(d.x / tileSize);
     const row = Math.floor(d.y / tileSize);
+    const playerCol = Math.floor(player.x / tileSize);
+    const playerRow = Math.floor(player.y / tileSize);
+    const playerTargetCol = Math.floor(player.targetX / tileSize);
+    const playerTargetRow = Math.floor(player.targetY / tileSize);
 
     for (const dir of directions) {
       const newCol = col + dir.dx;
       const newRow = row + dir.dy;
       if (map[newRow]?.[newCol] !== 0) continue;
+
+      if (
+        (newCol === playerCol && newRow === playerRow) ||
+        (newCol === playerTargetCol && newRow === playerTargetRow)
+      ) {
+        continue;
+      }
 
       const occupied = dementors.some(other => {
         if (other === d) return false;

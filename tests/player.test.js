@@ -95,8 +95,8 @@ describe('player.move', () => {
     player.x = tileSize - 0.3;
     player.y = tileSize;
     const result = player.move(tileSize, 0, tileSize, emptyMap);
-    assert.deepStrictEqual(result, { col: 2, row: 1 });
-    assert.strictEqual(player.x, tileSize * 2);
+    assert.deepStrictEqual(result, { col: 1, row: 1 });
+    assert.strictEqual(player.x, tileSize);
     assert.strictEqual(player.y, tileSize);
   });
 });
