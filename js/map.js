@@ -1,8 +1,8 @@
-export function generateMap(cols = 12, rows = 15) {
+export function generateMap(cols = 12, rows = 15, wallChance = 0.2) {
   const map = Array.from({ length: rows }, (_, r) =>
     Array.from({ length: cols }, (_, c) => {
       if (r === 0 || c === 0 || r === rows - 1 || c === cols - 1) return 1;
-      return Math.random() < 0.2 ? 1 : 0;
+      return Math.random() < wallChance ? 1 : 0;
     })
   );
 

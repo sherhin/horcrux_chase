@@ -1,4 +1,6 @@
 let dementors = [];
+let moveDuration = 600;
+let moveCooldown = 1000;
 
 export function getDementors() {
   return dementors;
@@ -26,11 +28,22 @@ function hasFreeNeighbor(col, row, map) {
   return dirs.some(dir => map[row + dir.dy]?.[col + dir.dx] === 0);
 }
 
-export function generateDementors(image, map, tileSize, forbidden = [], minDistance = 1) {
+export function generateDementors(
+  image,
+  map,
+  tileSize,
+  forbidden = [],
+  minDistance = 1,
+  count = 3,
+  duration = 600,
+  cooldown = 1000
+) {
   dementors = [];
-  let count = 0;
+  moveDuration = duration;
+  moveCooldown = cooldown;
+  let placed = 0;
 
-  while (count < 3) {
+  while (placed < count) {
     const col = Math.floor(Math.random() * map[0].length);
     const row = Math.floor(Math.random() * map.length);
 
@@ -52,7 +65,7 @@ export function generateDementors(image, map, tileSize, forbidden = [], minDista
         isMoving: false,
         lastMoveTime: performance.now()
       });
-      count++;
+      placed++;
     }
   }
 }
@@ -60,7 +73,7 @@ export function generateDementors(image, map, tileSize, forbidden = [], minDista
 export function updateDementors(tileSize, map, player) {
   const now = performance.now();
   dementors.forEach(d => {
-    if (d.isMoving || now - d.lastMoveTime < 1000) return;
+    if (d.isMoving || now - d.lastMoveTime < moveCooldown) return;
 
     const directions = [
       { dx: 0, dy: -1 },
@@ -108,14 +121,13 @@ export function updateDementors(tileSize, map, player) {
       const startX = d.x;
       const startY = d.y;
       const startTime = performance.now();
-      const duration = 600;
 
       const animate = (time) => {
         const elapsed = time - startTime;
-        const t = Math.min(elapsed / duration, 1);
+        const t = Math.min(elapsed / moveDuration, 1);
         d.x = startX + (d.targetX - startX) * t;
         d.y = startY + (d.targetY - startY) * t;
-        if (elapsed < duration) {
+        if (elapsed < moveDuration) {
           requestAnimationFrame(animate);
         } else {
           d.x = d.targetX;

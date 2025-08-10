@@ -12,16 +12,64 @@ let assetsLoaded = 0;
 const TOTAL_ASSETS = 12;
 let gameState = 'playing';
 let wallImage, floorImage, harryImage, tomImage;
-let snakeImage, diademImage, diaryImage, locketImage, ringImage
+let snakeImage, diademImage, diaryImage, locketImage, ringImage;
 let winImage, loseImage;
 let winSound, loseSound;
 let dementorImage;
 let restartBtn;
 let tomInterval;
-const tomSpeed = 0.8;
-const MIN_DISTANCE = 2;
-const MAP_WIDTH = 12;
-const MAP_HEIGHT = 15;
+
+export const DIFFICULTY_SETTINGS = {
+  easy: {
+    mapWidth: 10,
+    mapHeight: 12,
+    tomSpeed: 0.6,
+    horcruxCount: 3,
+    dementorCount: 2,
+    wallChance: 0.15,
+    moveDuration: 700,
+    moveCooldown: 1200,
+    MIN_DISTANCE: 2
+  },
+  normal: {
+    mapWidth: 12,
+    mapHeight: 15,
+    tomSpeed: 0.8,
+    horcruxCount: 4,
+    dementorCount: 3,
+    wallChance: 0.2,
+    moveDuration: 600,
+    moveCooldown: 1000,
+    MIN_DISTANCE: 2
+  },
+  hard: {
+    mapWidth: 14,
+    mapHeight: 17,
+    tomSpeed: 1.0,
+    horcruxCount: 5,
+    dementorCount: 4,
+    wallChance: 0.25,
+    moveDuration: 500,
+    moveCooldown: 800,
+    MIN_DISTANCE: 2
+  }
+};
+
+let currentDifficulty = 'normal';
+let currentSettings = DIFFICULTY_SETTINGS[currentDifficulty];
+let tomSpeed = currentSettings.tomSpeed;
+let MIN_DISTANCE = currentSettings.MIN_DISTANCE;
+let MAP_WIDTH = currentSettings.mapWidth;
+let MAP_HEIGHT = currentSettings.mapHeight;
+let wallChance = currentSettings.wallChance;
+let horcruxCount = currentSettings.horcruxCount;
+let dementorCount = currentSettings.dementorCount;
+let moveDuration = currentSettings.moveDuration;
+let moveCooldown = currentSettings.moveCooldown;
+let startRequested = false;
+let controlsInitialized = false;
+let loopStarted = false;
+let resizeBound = false;
 let map;
 let harryStart;
 let tomStart;
@@ -49,13 +97,19 @@ function setGameState(state) {
     sessionStorage.setItem('losses', loseCount);
     loseSound.currentTime = 0;
     loseSound.play().catch(() => {});
+    const startScreen = document.getElementById('start-screen');
+    const diffSelect = document.getElementById('difficulty');
+    if (startScreen && diffSelect) {
+      startScreen.style.display = 'block';
+      diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
+    }
   }
   updateScoreboard();
 }
 
 function generateLevel() {
   while (true) {
-    const newMap = generateMap(MAP_WIDTH, MAP_HEIGHT);
+    const newMap = generateMap(MAP_WIDTH, MAP_HEIGHT, wallChance);
     const h = { col: 1, row: 1 };
     const t = { col: newMap[0].length - 2, row: newMap.length - 2 };
     if (newMap[h.row][h.col] !== 0) continue;
@@ -112,10 +166,6 @@ window.onload = () => {
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
 
-  generateLevel();
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-
   wallImage = loadImage('./assets/walls.png');
   floorImage = loadImage('./assets/floor.png');
   harryImage = loadImage('./assets/harry.png');
@@ -124,7 +174,7 @@ window.onload = () => {
   diademImage = loadImage('./assets/diadem.png');
   diaryImage = loadImage('./assets/diary.png');
   ringImage = loadImage('./assets/ring.png');
-  locketImage = loadImage('./assets/locket.png')
+  locketImage = loadImage('./assets/locket.png');
   winImage = loadImage('./assets/win_screen.png');
   loseImage = loadImage('./assets/lose_screen.png');
   winSound = typeof Audio !== 'undefined'
@@ -135,29 +185,9 @@ window.onload = () => {
     : { play: () => Promise.resolve(), currentTime: 0 };
   dementorImage = loadImage('./assets/dementor.png');
 
+  restartBtn.addEventListener('click', restartGame);
 
-  restartBtn.addEventListener('click', () => {
-    generateLevel();
-    resizeCanvas();
-    player.init(harryImage, tileSize, harryStart.col, harryStart.row);
-    initTom(tomImage, tileSize, tomStart.col, tomStart.row);
-    const startPos = { x: harryStart.col, y: harryStart.row };
-    generateHorcruxes(
-      [snakeImage, diademImage, diaryImage, locketImage, ringImage],
-      map,
-      startPos,
-      [startPos],
-      MIN_DISTANCE
-    );
-    const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
-    forbidden.push(startPos);
-    generateDementors(dementorImage, map, tileSize, forbidden, MIN_DISTANCE);
-
-    setGameState('playing');
-    restartBtn.style.display = 'none';
-
-    stopTomSpeech();
-  });
+  initDifficulty();
 };
 
 
@@ -171,24 +201,101 @@ function loadImage(src) {
 
 function assetLoaded() {
   assetsLoaded++;
-  if (assetsLoaded === TOTAL_ASSETS) {
-    player.init(harryImage, tileSize, harryStart.col, harryStart.row);
-    initTom(tomImage, tileSize, tomStart.col, tomStart.row);
-    const startPos = { x: harryStart.col, y: harryStart.row };
-    generateHorcruxes(
-      [snakeImage, diademImage, diaryImage, ringImage, locketImage],
-      map,
-      startPos,
-      [startPos],
-      MIN_DISTANCE
-    );
-    const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
-    forbidden.push(startPos);
-    generateDementors(dementorImage, map, tileSize, forbidden, MIN_DISTANCE);
+  if (assetsLoaded === TOTAL_ASSETS && startRequested) {
+    setupGame();
+  }
+}
+
+function setupGame() {
+  const startPos = { x: harryStart.col, y: harryStart.row };
+  player.init(harryImage, tileSize, harryStart.col, harryStart.row);
+  initTom(tomImage, tileSize, tomStart.col, tomStart.row);
+  const horcruxImages = [
+    snakeImage,
+    diademImage,
+    diaryImage,
+    locketImage,
+    ringImage
+  ].slice(0, horcruxCount);
+  generateHorcruxes(horcruxImages, map, startPos, [startPos], MIN_DISTANCE);
+  const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
+  forbidden.push(startPos);
+  generateDementors(
+    dementorImage,
+    map,
+    tileSize,
+    forbidden,
+    MIN_DISTANCE,
+    dementorCount,
+    moveDuration,
+    moveCooldown
+  );
+  if (!controlsInitialized) {
     setupControls();
-    startTomLoop();
+    controlsInitialized = true;
+  }
+  startTomLoop();
+  if (!loopStarted) {
+    loopStarted = true;
     requestAnimationFrame(loop);
   }
+}
+
+export function startGame(difficulty) {
+  currentDifficulty = difficulty;
+  currentSettings = DIFFICULTY_SETTINGS[currentDifficulty];
+  tomSpeed = currentSettings.tomSpeed;
+  MIN_DISTANCE = currentSettings.MIN_DISTANCE;
+  MAP_WIDTH = currentSettings.mapWidth;
+  MAP_HEIGHT = currentSettings.mapHeight;
+  wallChance = currentSettings.wallChance;
+  horcruxCount = currentSettings.horcruxCount;
+  dementorCount = currentSettings.dementorCount;
+  moveDuration = currentSettings.moveDuration;
+  moveCooldown = currentSettings.moveCooldown;
+  startRequested = true;
+  generateLevel();
+  resizeCanvas();
+  if (!resizeBound) {
+    window.addEventListener('resize', resizeCanvas);
+    resizeBound = true;
+  }
+  if (assetsLoaded === TOTAL_ASSETS) {
+    setupGame();
+  }
+  setGameState('playing');
+  restartBtn.style.display = 'none';
+  stopTomSpeech();
+}
+
+function restartGame() {
+  generateLevel();
+  resizeCanvas();
+  if (!resizeBound) {
+    window.addEventListener('resize', resizeCanvas);
+    resizeBound = true;
+  }
+  if (assetsLoaded === TOTAL_ASSETS) {
+    setupGame();
+    setGameState('playing');
+    restartBtn.style.display = 'none';
+    stopTomSpeech();
+  }
+}
+
+export function initDifficulty() {
+  const startScreen = document.getElementById('start-screen');
+  const diffSelect = document.getElementById('difficulty');
+  const startBtn = document.getElementById('start-btn');
+  const saved = sessionStorage.getItem('difficulty') || currentDifficulty;
+  if (diffSelect) diffSelect.value = saved;
+  if (startScreen) startScreen.style.display = 'block';
+  startBtn.addEventListener('click', () => {
+    const selected = diffSelect.value;
+    sessionStorage.setItem('difficulty', selected);
+    if (startScreen) startScreen.style.display = 'none';
+    startGame(selected);
+  });
 }
 
 
@@ -365,7 +472,7 @@ function draw() {
   } else if (gameState === 'lose') {
     stopTomSpeech();
     ctx.drawImage(loseImage, 0, 0, displayWidth, displayHeight);
-    restartBtn.style.display = 'block';
+    restartBtn.style.display = 'none';
   } else {
     restartBtn.style.display = 'none';
   }
