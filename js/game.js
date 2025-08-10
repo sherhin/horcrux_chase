@@ -455,8 +455,12 @@ function draw() {
   drawMap(ctx, tileSize, wallImage, floorImage, map);
   drawHorcruxes(ctx, tileSize);
   drawDementors(ctx, tileSize);
-  player.draw(ctx, tileSize);
-  drawTom(ctx, tileSize);
+  if (player.image) {
+    player.draw(ctx, tileSize);
+  }
+  if (tom.image) {
+    drawTom(ctx, tileSize);
+  }
   updateAndDrawParticles(ctx);
   updateSpeechPosition(canvas, tileSize);
 
