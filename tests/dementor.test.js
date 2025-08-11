@@ -169,7 +169,8 @@ test('updateDementors moves dementors to adjacent free cells without collisions 
     generateDementors(image, map, tileSize);
     const before = getDementors().map(d => [d.x / tileSize, d.y / tileSize]);
 
-    updateDementors(tileSize, map);
+    const player = { x: 20, y: 20, targetX: 20, targetY: 20 };
+    updateDementors(tileSize, map, player);
     const after = getDementors().map(d => [d.x / tileSize, d.y / tileSize]);
 
     const unique = new Set(after.map(p => p.toString()));

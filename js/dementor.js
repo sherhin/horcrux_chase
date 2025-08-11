@@ -1,4 +1,6 @@
 let dementors = [];
+let moveDuration = 600;
+let moveCooldown = 1000;
 
 export function getDementors() {
   return dementors;
@@ -26,11 +28,22 @@ function hasFreeNeighbor(col, row, map) {
   return dirs.some(dir => map[row + dir.dy]?.[col + dir.dx] === 0);
 }
 
-export function generateDementors(image, map, tileSize, forbidden = [], minDistance = 1) {
+export function generateDementors(
+  image,
+  map,
+  tileSize,
+  forbidden = [],
+  minDistance = 1,
+  count = 3,
+  duration = 600,
+  cooldown = 1000
+) {
   dementors = [];
-  let count = 0;
+  moveDuration = duration;
+  moveCooldown = cooldown;
+  let placed = 0;
 
-  while (count < 3) {
+  while (placed < count) {
     const col = Math.floor(Math.random() * map[0].length);
     const row = Math.floor(Math.random() * map.length);
 
@@ -52,15 +65,15 @@ export function generateDementors(image, map, tileSize, forbidden = [], minDista
         isMoving: false,
         lastMoveTime: performance.now()
       });
-      count++;
+      placed++;
     }
   }
 }
 
-export function updateDementors(tileSize, map) {
+export function updateDementors(tileSize, map, player) {
   const now = performance.now();
   dementors.forEach(d => {
-    if (d.isMoving || now - d.lastMoveTime < 1000) return;
+    if (d.isMoving || now - d.lastMoveTime < moveCooldown) return;
 
     const directions = [
       { dx: 0, dy: -1 },
@@ -76,11 +89,22 @@ export function updateDementors(tileSize, map) {
 
     const col = Math.floor(d.x / tileSize);
     const row = Math.floor(d.y / tileSize);
+    const playerCol = Math.floor(player.x / tileSize);
+    const playerRow = Math.floor(player.y / tileSize);
+    const playerTargetCol = Math.floor(player.targetX / tileSize);
+    const playerTargetRow = Math.floor(player.targetY / tileSize);
 
     for (const dir of directions) {
       const newCol = col + dir.dx;
       const newRow = row + dir.dy;
       if (map[newRow]?.[newCol] !== 0) continue;
+
+      if (
+        (newCol === playerCol && newRow === playerRow) ||
+        (newCol === playerTargetCol && newRow === playerTargetRow)
+      ) {
+        continue;
+      }
 
       const occupied = dementors.some(other => {
         if (other === d) return false;
@@ -97,14 +121,13 @@ export function updateDementors(tileSize, map) {
       const startX = d.x;
       const startY = d.y;
       const startTime = performance.now();
-      const duration = 600;
 
       const animate = (time) => {
         const elapsed = time - startTime;
-        const t = Math.min(elapsed / duration, 1);
+        const t = Math.min(elapsed / moveDuration, 1);
         d.x = startX + (d.targetX - startX) * t;
         d.y = startY + (d.targetY - startY) * t;
-        if (elapsed < duration) {
+        if (elapsed < moveDuration) {
           requestAnimationFrame(animate);
         } else {
           d.x = d.targetX;
