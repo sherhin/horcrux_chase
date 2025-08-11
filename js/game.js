@@ -87,7 +87,7 @@ function updateScoreboard() {
 function setGameState(state) {
   if (gameState === state) return;
   gameState = state;
-  if (state !== 'playing' && tomInterval) {
+  if ((state === 'win' || state === 'lose') && tomInterval) {
     clearInterval(tomInterval);
     tomInterval = null;
   }
@@ -269,6 +269,10 @@ export function startGame(difficulty) {
 }
 
 function restartGame() {
+  if (tomInterval) {
+    clearInterval(tomInterval);
+    tomInterval = null;
+  }
   const startScreen = document.getElementById('start-screen');
   const diffSelect = document.getElementById('difficulty');
   if (startScreen && diffSelect) {
