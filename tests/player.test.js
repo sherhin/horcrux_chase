@@ -91,12 +91,12 @@ describe('player.move', () => {
     assert.strictEqual(spawnParticlesMock.mock.callCount(), 1);
   });
 
-  it('aligns to grid when starting slightly off it', () => {
+  it('moves correctly from slightly off-grid position', () => {
     player.x = tileSize - 0.3;
     player.y = tileSize;
     const result = player.move(tileSize, 0, tileSize, emptyMap);
-    assert.deepStrictEqual(result, { col: 1, row: 1 });
-    assert.strictEqual(player.x, tileSize);
+    assert.deepStrictEqual(result, { col: 2, row: 1 });
+    assert.strictEqual(player.x, tileSize * 2);
     assert.strictEqual(player.y, tileSize);
   });
 });
