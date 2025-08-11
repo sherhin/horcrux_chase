@@ -9,15 +9,20 @@ export const player = {
   targetX: null,
   targetY: null,
   isMoving: false,
+  queuedMove: null,
   image: null,
   init(img, tileSize, startCol = 1, startRow = 1) {
     this.image = img;
     this.x = this.targetX = startCol * tileSize;
     this.y = this.targetY = startRow * tileSize;
     this.isMoving = false;
+    this.queuedMove = null;
   },
-  move(dx, dy, tileSize, map) {
-    if (this.isMoving) return null;
+  move(dx, dy, tileSize, map, onComplete) {
+    if (this.isMoving) {
+      this.queuedMove = { dx, dy };
+      return null;
+    }
     const tentativeX = this.x + dx;
     const tentativeY = this.y + dy;
     const col = Math.floor(tentativeX / tileSize);
@@ -62,6 +67,12 @@ export const player = {
           this.x = this.targetX;
           this.y = this.targetY;
           this.isMoving = false;
+          if (onComplete) onComplete({ col, row });
+          if (this.queuedMove) {
+            const next = this.queuedMove;
+            this.queuedMove = null;
+            this.move(next.dx, next.dy, tileSize, map, onComplete);
+          }
         }
       };
       requestAnimationFrame(animate);
