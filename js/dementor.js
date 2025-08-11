@@ -43,8 +43,11 @@ export function generateDementors(
   moveDuration = duration;
   moveCooldown = cooldown;
   let placed = 0;
+  let attempts = 0;
+  const maxAttempts = count * 10;
 
-  while (placed < count) {
+  while (placed < count && attempts < maxAttempts) {
+    attempts++;
     const col = Math.floor(Math.random() * map[0].length);
     const row = Math.floor(Math.random() * map.length);
 
@@ -68,6 +71,9 @@ export function generateDementors(
       });
       placed++;
     }
+  }
+  if (placed < count) {
+    console.warn(`Only placed ${placed} of ${count} dementors after ${attempts} attempts.`);
   }
 }
 
