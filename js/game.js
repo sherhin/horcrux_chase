@@ -254,6 +254,7 @@ export function startGame(difficulty) {
   moveDuration = currentSettings.moveDuration;
   moveCooldown = currentSettings.moveCooldown;
   startRequested = true;
+  activeDementorCollisions.clear();
   generateLevel();
   resizeCanvas();
   if (!resizeBound) {
@@ -269,6 +270,7 @@ export function startGame(difficulty) {
 }
 
 function restartGame() {
+  activeDementorCollisions.clear();
   generateLevel();
   resizeCanvas();
   if (!resizeBound) {
