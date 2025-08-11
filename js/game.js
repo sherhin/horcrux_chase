@@ -249,7 +249,7 @@ export function startGame(difficulty) {
   moveDuration = currentSettings.moveDuration;
   moveCooldown = currentSettings.moveCooldown;
   startRequested = true;
-  activeDementorCollisions.clear ()
+  activeDementorCollisions.clear();
   generateLevel();
   resizeCanvas();
   if (!resizeBound) {
@@ -272,7 +272,7 @@ function restartGame() {
     diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
   }
   restartBtn.style.display = 'none';
-  activeDementorCollisions.clear ()
+  activeDementorCollisions.clear();
   stopTomSpeech();
   gameState = 'start';
 }
