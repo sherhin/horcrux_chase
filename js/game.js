@@ -3,7 +3,12 @@ import { player } from './player.js';
 import { horcruxes, generateHorcruxes, drawHorcruxes, checkPickup } from './horcruxManager.js';
 import { tom, initTom, moveTom, drawTom, sayTomQuote, updateSpeechPosition, stopTomSpeech } from './tom.js';
 import { findPath } from './pathfinding.js';
-import { updateAndDrawParticles, particles, spawnParticles } from './particle.js';
+import {
+  updateAndDrawParticles,
+  particles,
+  spawnParticles,
+  clearParticles
+} from './particle.js';
 import { generateDementors, drawDementors, updateDementors, getDementors } from './dementor.js';
 
 let canvas, ctx;
@@ -237,6 +242,7 @@ function setupGame() {
 }
 
 export function startGame(difficulty) {
+  clearParticles();
   currentDifficulty = difficulty;
   currentSettings = DIFFICULTY_SETTINGS[currentDifficulty];
   tomSpeed = currentSettings.tomSpeed;
@@ -265,6 +271,7 @@ export function startGame(difficulty) {
 }
 
 function restartGame() {
+  clearParticles();
   const startScreen = document.getElementById('start-screen');
   const diffSelect = document.getElementById('difficulty');
   if (startScreen && diffSelect) {
