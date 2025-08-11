@@ -35,7 +35,9 @@ let snakeImage, diademImage, diaryImage, locketImage, ringImage;
 let winImage, loseImage;
 let winSound, loseSound;
 let dementorImage;
+let endButtons;
 let restartBtn;
+let menuBtn;
 let tomInterval;
 
 export const DIFFICULTY_SETTINGS = {
@@ -174,7 +176,9 @@ function resizeCanvas() {
 window.onload = () => {
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
+  endButtons = document.getElementById('endButtons');
   restartBtn = document.getElementById('restartBtn');
+  menuBtn = document.getElementById('menuBtn');
   winDisplay = document.getElementById('winCount');
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
@@ -203,6 +207,7 @@ window.onload = () => {
     : { play: () => Promise.resolve(), currentTime: 0 };
 
   restartBtn.addEventListener('click', restartGame);
+  menuBtn.addEventListener('click', returnToMenu);
 
   initDifficulty();
 };
@@ -284,11 +289,11 @@ export function startGame(difficulty) {
     setupGame();
   }
   setGameState('playing');
-  restartBtn.style.display = 'none';
+  endButtons.style.display = 'none';
   stopTomSpeech();
 }
 
-function restartGame() {
+function returnToMenu() {
   clearParticles();
   const startScreen = document.getElementById('start-screen');
   const diffSelect = document.getElementById('difficulty');
@@ -296,10 +301,14 @@ function restartGame() {
     startScreen.style.display = 'block';
     diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
   }
-  restartBtn.style.display = 'none';
+  endButtons.style.display = 'none';
   activeDementorCollisions.clear();
   stopTomSpeech();
   gameState = 'start';
+}
+
+function restartGame() {
+  startGame(currentDifficulty);
 }
 
 export function initDifficulty() {
@@ -493,13 +502,13 @@ function draw() {
   if (gameState === 'win') {
     stopTomSpeech();
     ctx.drawImage(winImage, 0, 0, displayWidth, displayHeight);
-    restartBtn.style.display = 'block';
+    endButtons.style.display = 'flex';
   } else if (gameState === 'lose') {
     stopTomSpeech();
     ctx.drawImage(loseImage, 0, 0, displayWidth, displayHeight);
-    restartBtn.style.display = 'block';
+    endButtons.style.display = 'flex';
   } else {
-    restartBtn.style.display = 'none';
+    endButtons.style.display = 'none';
   }
 }
 
