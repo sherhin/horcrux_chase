@@ -1,175 +1,179 @@
+/* ===== Base ===== */
+* { box-sizing: border-box; }
+
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #1b1b1b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: sans-serif;
-    position: relative;
-    overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #1b1b1b;
+  min-height: 100vh;
+  font-family: sans-serif;
+  position: relative;
+  overflow: hidden; /* чтобы фон/канвас не прокручивались */
 }
 
+/* ===== Start screen overlay ===== */
 #start-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    background: url('../assets/start.png') no-repeat center center/cover;
-    color: #d4af37;
-    z-index: 100;
+  position: fixed;            /* перекрывает весь экран */
+  inset: 0;                   /* top:0; right:0; bottom:0; left:0; */
+  display: flex;
+  justify-content: center;    /* по центру по X */
+  align-items: flex-end;      /* прижать контент к низу */
+  background: url('../assets/start.png') no-repeat center center / cover;
+  color: #d4af37;
+  z-index: 100;               /* выше игры, ниже всплывающих подсказок */
 }
 
+/* ===== Start menu (pinned bottom-center) ===== */
 #start-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2vh;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 1rem 2rem;
-    border-radius: 8px;
+  position: fixed;            /* не зависит от родителя, не «прыгает» */
+  left: 50%;
+  bottom: 10vh;
+  transform: translateX(-50%);
+  z-index: 1001;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 #start-menu select,
 #start-menu button {
-    font-size: 1.2rem;
-    padding: 0.75rem 1.5rem;
-    background-color: transparent;
-    border: 2px solid #d4af37;
-    color: #d4af37;
-    border-radius: 8px;
+  font-size: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  border-radius: 8px;
 }
 
 #start-menu select:hover,
 #start-menu button:hover {
-    background-color: rgba(212, 175, 55, 0.1);
+  background-color: rgba(212, 175, 55, 0.1);
 }
 
+/* ===== Game area ===== */
 #gameContainer {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 #gameCanvas {
-    border: 2px solid #444;
-    background-color: #000;
-    touch-action: none;
+  border: 2px solid #444;
+  background-color: #000;
+  touch-action: none;
 }
 
+/* ===== HUD ===== */
 #scoreboard {
-    position: absolute;
-    top: 1vh;
-    left: 1vw;
-    color: #d4af37;
-    font-size: 2vh;
-    z-index: 20;
-    border: 2px solid #d4af37;
-    border-radius: 8px;
-    padding: 0.5vh 1vw;
-    background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 1vh;
+  left: 1vw;
+  color: #d4af37;
+  font-size: 2vh;
+  z-index: 20;
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  padding: 0.5vh 1vw;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
-/* On-screen movement controls */
+/* ===== On-screen controls ===== */
 #controls {
-    position: absolute;
-    bottom: 2vh;
-    right: 2vw;
-    display: grid;
-    grid-template-columns: repeat(3, 10vw);
-    grid-template-rows: repeat(3, 10vw);
-    max-width: 150px;
-    max-height: 150px;
-    gap: 1vw;
-    z-index: 30;
+  position: absolute;
+  bottom: 2vh;
+  right: 2vw;
+  display: grid;
+  grid-template-columns: repeat(3, 10vw);
+  grid-template-rows: repeat(3, 10vw);
+  max-width: 150px;
+  max-height: 150px;
+  gap: 1vw;
+  z-index: 30;
 }
 
 .control-btn {
-    background-color: rgba(0, 0, 0, 0.6);
-    border: 2px solid #d4af37;
-    color: #d4af37;
-    border-radius: 8px;
-    font-size: 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  border-radius: 8px;
+  font-size: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
-.control-btn.up { grid-column: 2; grid-row: 1; }
-.control-btn.left { grid-column: 1; grid-row: 2; }
-.control-btn.down { grid-column: 2; grid-row: 3; }
+.control-btn.up    { grid-column: 2; grid-row: 1; }
+.control-btn.left  { grid-column: 1; grid-row: 2; }
+.control-btn.down  { grid-column: 2; grid-row: 3; }
 .control-btn.right { grid-column: 3; grid-row: 2; }
 
-.control-btn:active {
-    background-color: #333;
-}
+.control-btn:active { background-color: #333; }
 
-/* Restart button styling */
+/* ===== Restart button ===== */
 #restartBtn {
-    display: none;
-    position: absolute;
-    top: 60vh; /* place lower on the screen using viewport units */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2vh 8vw 2vh 12vw; /* wider and taller */
-    font-size: 3vh; /* larger text */
-    font-family: inherit;
-    cursor: pointer;
-    z-index: 40;
-    background-color: #222;
-    border: 2px solid #d4af37;
-    color: #d4af37;
-    border-radius: 8px;
-    background-image: url('../assets/ring.png');
-    background-repeat: no-repeat;
-    background-size: 6vh 6vh; /* enlarge icon */
-    background-position: 3vw center; /* adjust icon placement */
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-@media (max-width: 600px) {
-    #restartBtn {
-        top: 55vh;
-        padding: 2vh 10vw 2vh 16vw;
-        font-size: 2.5vh;
-        background-size: 5vh 5vh;
-        background-position: 5vw center;
-    }
+  display: none;
+  position: absolute;
+  top: 60vh;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2vh 8vw 2vh 12vw;
+  font-size: 3vh;
+  font-family: inherit;
+  cursor: pointer;
+  z-index: 40;
+  background-color: #222;
+  border: 2px solid #d4af37;
+  color: #d4af37;
+  border-radius: 8px;
+  background-image: url('../assets/ring.png');
+  background-repeat: no-repeat;
+  background-size: 6vh 6vh;
+  background-position: 3vw center;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 #restartBtn:hover {
-    background-color: #333;
-    transform: translate(-50%, -50%) scale(1.05);
+  background-color: #333;
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
+@media (max-width: 600px) {
+  #restartBtn {
+    top: 55vh;
+    padding: 2vh 10vw 2vh 16vw;
+    font-size: 2.5vh;
+    background-size: 5vh 5vh;
+    background-position: 5vw center;
+  }
+}
+
+/* ===== Tom speech bubble ===== */
 #tomSpeech {
-    position: absolute;
-    background: radial-gradient(circle at center, #f5f5f5 0%, #d9d9d9 70%, #bcbcbc 100%);
-    color: #333;
-    padding: 8px 16px;
-    border-radius: 40px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    display: none;
-    font-size: 16px;
-    pointer-events: none;
-    z-index: 999;
-    white-space: nowrap;
+  position: absolute;
+  background: radial-gradient(circle at center, #f5f5f5 0%, #d9d9d9 70%, #bcbcbc 100%);
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 40px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  display: none;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 999;
+  white-space: nowrap;
 }
 
 #tomSpeech::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    width: 12px;
-    height: 12px;
-    background: radial-gradient(circle at center, #f5f5f5 0%, #d9d9d9 70%, #bcbcbc 100%);
-    transform: translateX(-50%) rotate(45deg);
-    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at center, #f5f5f5 0%, #d9d9d9 70%, #bcbcbc 100%);
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
 }
-
