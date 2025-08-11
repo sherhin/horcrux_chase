@@ -392,8 +392,7 @@ function onKey(e) {
     case 'ArrowRight': dx = tileSize; break;
     default: return; // Ignore other keys
   }
-  const moved = player.move(dx, dy, tileSize, map, handlePlayerMove);
-  handlePlayerMove(moved);
+  player.move(dx, dy, tileSize, map, handlePlayerMove);
 }
 
 function handlePlayerMove(moved) {

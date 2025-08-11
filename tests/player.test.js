@@ -99,4 +99,11 @@ describe('player.move', () => {
     assert.strictEqual(player.x, tileSize * 2);
     assert.strictEqual(player.y, tileSize);
   });
+
+  it('invokes onComplete callback once when move finishes', () => {
+    const onComplete = mock.fn();
+    player.move(tileSize, 0, tileSize, emptyMap, onComplete);
+    assert.strictEqual(onComplete.mock.callCount(), 1);
+    assert.deepStrictEqual(onComplete.mock.calls[0].arguments[0], { col: 2, row: 1 });
+  });
 });
