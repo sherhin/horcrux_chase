@@ -31,6 +31,10 @@ export class Particle {
 
 export const particles = [];
 
+export function clearParticles() {
+  particles.length = 0;
+}
+
 export function spawnParticles(x, y, character, dx = 0, dy = 0) {
   const colors = character === 'tom' ? ['green', 'silver'] : ['red', 'gold'];
   const mag = Math.sqrt(dx * dx + dy * dy) || 1;
