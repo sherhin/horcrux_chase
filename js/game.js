@@ -228,7 +228,8 @@ function setupGame() {
     MIN_DISTANCE,
     dementorCount,
     moveDuration,
-    moveCooldown
+    moveCooldown,
+    0
   );
   if (!controlsInitialized) {
     setupControls();
