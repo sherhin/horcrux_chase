@@ -57,3 +57,7 @@ export function updateAndDrawParticles(ctx) {
   }
 }
 
+export function clearParticles() {
+  particles.length = 0;
+}
+
