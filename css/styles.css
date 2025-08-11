@@ -135,17 +135,17 @@ body {
 }
 
 #restartBtn {
-  padding: 2vh 8vw 2vh 12vw;
-  font-size: 3vh;
+  padding: 1.5vh 6vw 1.5vh 10vw;
+  font-size: 2.5vh;
   background-image: url('../assets/ring.png');
   background-repeat: no-repeat;
-  background-size: 6vh 6vh;
-  background-position: 3vw center;
+  background-size: 4vh 4vh;
+  background-position: 2vw center;
 }
 
 #menuBtn {
-  padding: 2vh 8vw;
-  font-size: 3vh;
+  padding: 1.5vh 6vw;
+  font-size: 2.5vh;
 }
 
 #restartBtn:hover,
@@ -159,14 +159,14 @@ body {
     top: 55vh;
   }
   #restartBtn {
-    padding: 2vh 10vw 2vh 16vw;
-    font-size: 2.5vh;
-    background-size: 5vh 5vh;
-    background-position: 5vw center;
+    padding: 1.5vh 8vw 1.5vh 14vw;
+    font-size: 2vh;
+    background-size: 4vh 4vh;
+    background-position: 4vw center;
   }
   #menuBtn {
-    padding: 2vh 10vw;
-    font-size: 2.5vh;
+    padding: 1.5vh 8vw;
+    font-size: 2vh;
   }
 }
 
