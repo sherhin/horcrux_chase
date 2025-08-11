@@ -87,11 +87,9 @@ function updateScoreboard() {
 function setGameState(state) {
   if (gameState === state) return;
   gameState = state;
-  if (state === 'win' || state === 'lose') {
-    if (tomInterval) {
-      clearInterval(tomInterval);
-      tomInterval = null;
-    }
+  if (state !== 'playing' && tomInterval) {
+    clearInterval(tomInterval);
+    tomInterval = null;
   }
   if (state === 'win') {
     winCount++;
@@ -255,7 +253,7 @@ export function startGame(difficulty) {
   moveDuration = currentSettings.moveDuration;
   moveCooldown = currentSettings.moveCooldown;
   startRequested = true;
-  activeDementorCollisions.clear ()
+  activeDementorCollisions.clear();
   generateLevel();
   resizeCanvas();
   if (!resizeBound) {
@@ -278,13 +276,9 @@ function restartGame() {
     diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
   }
   restartBtn.style.display = 'none';
-  if (tomInterval) {
-    clearInterval(tomInterval);
-    tomInterval = null;
-  }
-  activeDementorCollisions.clear ()
+  setGameState('start');
+  activeDementorCollisions.clear();
   stopTomSpeech();
-  gameState = 'start';
 }
 
 export function initDifficulty() {
