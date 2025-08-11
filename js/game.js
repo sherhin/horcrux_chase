@@ -9,7 +9,21 @@ import { generateDementors, drawDementors, updateDementors, getDementors } from 
 let canvas, ctx;
 let tileSize;
 let assetsLoaded = 0;
-const TOTAL_ASSETS = 12;
+const ASSET_URLS = [
+  './assets/walls.png',
+  './assets/floor.png',
+  './assets/harry.png',
+  './assets/tom.png',
+  './assets/snake.png',
+  './assets/diadem.png',
+  './assets/diary.png',
+  './assets/ring.png',
+  './assets/locket.png',
+  './assets/win_screen.png',
+  './assets/lose_screen.png',
+  './assets/dementor.png'
+];
+const TOTAL_ASSETS = ASSET_URLS.length;
 let gameState = 'playing';
 let wallImage, floorImage, harryImage, tomImage;
 let snakeImage, diademImage, diaryImage, locketImage, ringImage;
@@ -160,24 +174,28 @@ window.onload = () => {
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
 
-  wallImage = loadImage('./assets/walls.png');
-  floorImage = loadImage('./assets/floor.png');
-  harryImage = loadImage('./assets/harry.png');
-  tomImage = loadImage('./assets/tom.png');
-  snakeImage = loadImage('./assets/snake.png');
-  diademImage = loadImage('./assets/diadem.png');
-  diaryImage = loadImage('./assets/diary.png');
-  ringImage = loadImage('./assets/ring.png');
-  locketImage = loadImage('./assets/locket.png');
-  winImage = loadImage('./assets/win_screen.png');
-  loseImage = loadImage('./assets/lose_screen.png');
+  const images = ASSET_URLS.map(src => loadImage(src));
+  [
+    wallImage,
+    floorImage,
+    harryImage,
+    tomImage,
+    snakeImage,
+    diademImage,
+    diaryImage,
+    ringImage,
+    locketImage,
+    winImage,
+    loseImage,
+    dementorImage
+  ] = images;
+
   winSound = typeof Audio !== 'undefined'
     ? new Audio('./assets/win.mp3')
     : { play: () => Promise.resolve(), currentTime: 0 };
   loseSound = typeof Audio !== 'undefined'
     ? new Audio('./assets/lose.mp3')
     : { play: () => Promise.resolve(), currentTime: 0 };
-  dementorImage = loadImage('./assets/dementor.png');
 
   restartBtn.addEventListener('click', restartGame);
 
