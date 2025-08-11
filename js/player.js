@@ -23,20 +23,18 @@ export const player = {
       this.queuedMove = { dx, dy };
       return null;
     }
-    const tentativeX = this.x + dx;
-    const tentativeY = this.y + dy;
-    const col = Math.floor(tentativeX / tileSize);
-    const row = Math.floor(tentativeY / tileSize);
-    const nx = col * tileSize;
-    const ny = row * tileSize;
-    if (map[row]?.[col] === 0) {
+    const currentCol = Math.round(this.x / tileSize);
+    const currentRow = Math.round(this.y / tileSize);
+    const targetCol = currentCol + Math.sign(dx);
+    const targetRow = currentRow + Math.sign(dy);
+    if (map[targetRow]?.[targetCol] === 0) {
       const occupied = getDementors().some(d => {
-        const currentCol = Math.floor(d.x / tileSize);
-        const currentRow = Math.floor(d.y / tileSize);
-        const targetCol = Math.floor((d.isMoving ? d.targetX : d.x) / tileSize);
-        const targetRow = Math.floor((d.isMoving ? d.targetY : d.y) / tileSize);
-        return (currentCol === col && currentRow === row) ||
-               (targetCol === col && targetRow === row);
+        const currentColD = Math.round(d.x / tileSize);
+        const currentRowD = Math.round(d.y / tileSize);
+        const targetColD = Math.round((d.isMoving ? d.targetX : d.x) / tileSize);
+        const targetRowD = Math.round((d.isMoving ? d.targetY : d.y) / tileSize);
+        return (currentColD === targetCol && currentRowD === targetRow) ||
+               (targetColD === targetCol && targetRowD === targetRow);
       });
       if (occupied) {
         const px = this.x + tileSize / 2;
@@ -51,8 +49,8 @@ export const player = {
       const py = startY + tileSize / 2;
       spawnParticles(px, py, 'harry', dx, dy);
 
-      this.targetX = nx;
-      this.targetY = ny;
+      this.targetX = targetCol * tileSize;
+      this.targetY = targetRow * tileSize;
       this.isMoving = true;
       const startTime = performance.now();
       const animate = (time) => {
@@ -67,7 +65,7 @@ export const player = {
           this.x = this.targetX;
           this.y = this.targetY;
           this.isMoving = false;
-          if (onComplete) onComplete({ col, row });
+          if (onComplete) onComplete({ col: targetCol, row: targetRow });
           if (this.queuedMove) {
             const next = this.queuedMove;
             this.queuedMove = null;
@@ -77,7 +75,7 @@ export const player = {
       };
       requestAnimationFrame(animate);
 
-      return { col, row };
+      return { col: targetCol, row: targetRow };
     }
     return null;
   },
