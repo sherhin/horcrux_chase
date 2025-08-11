@@ -113,41 +113,60 @@ body {
 
 .control-btn:active { background-color: #333; }
 
-/* ===== Restart button ===== */
-#restartBtn {
+/* ===== End buttons ===== */
+#endButtons {
   display: none;
   position: absolute;
   top: 60vh;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 2vh 8vw 2vh 12vw;
-  font-size: 3vh;
-  font-family: inherit;
-  cursor: pointer;
   z-index: 40;
+  gap: 2vw;
+}
+
+#endButtons button {
   background-color: #222;
   border: 2px solid #d4af37;
   color: #d4af37;
   border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#restartBtn {
+  padding: 2vh 8vw 2vh 12vw;
+  font-size: 3vh;
   background-image: url('../assets/ring.png');
   background-repeat: no-repeat;
   background-size: 6vh 6vh;
   background-position: 3vw center;
-  transition: background-color 0.3s, transform 0.3s;
 }
 
-#restartBtn:hover {
+#menuBtn {
+  padding: 2vh 8vw;
+  font-size: 3vh;
+}
+
+#restartBtn:hover,
+#menuBtn:hover {
   background-color: #333;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: scale(1.05);
 }
 
 @media (max-width: 600px) {
-  #restartBtn {
+  #endButtons {
     top: 55vh;
+  }
+  #restartBtn {
     padding: 2vh 10vw 2vh 16vw;
     font-size: 2.5vh;
     background-size: 5vh 5vh;
     background-position: 5vw center;
+  }
+  #menuBtn {
+    padding: 2vh 10vw;
+    font-size: 2.5vh;
   }
 }
 
