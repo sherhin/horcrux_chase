@@ -415,7 +415,7 @@ function startTomLoop() {
       map
     );
     moveTom(path, tileSize, tomSpeed);
-  }, 300);
+  }, 300 / tomSpeed);
 }
 
 const activeDementorCollisions = new Set();
