@@ -36,7 +36,8 @@ export function generateDementors(
   minDistance = 1,
   count = 3,
   duration = 600,
-  cooldown = 1000
+  cooldown = 1000,
+  initialDelay = cooldown
 ) {
   dementors = [];
   moveDuration = duration;
@@ -63,7 +64,7 @@ export function generateDementors(
         targetX: px,
         targetY: py,
         isMoving: false,
-        lastMoveTime: performance.now()
+        lastMoveTime: performance.now() - moveCooldown + initialDelay
       });
       placed++;
     }
