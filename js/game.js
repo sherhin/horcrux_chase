@@ -373,25 +373,27 @@ function onKey(e) {
     case 'ArrowRight': dx = tileSize; break;
     default: return; // Ignore other keys
   }
+  const moved = player.move(dx, dy, tileSize, map, handlePlayerMove);
+  handlePlayerMove(moved);
+}
 
-  const moved = player.move(dx, dy, tileSize, map);
-  if (moved) {
-    const allCollected = checkPickup(moved.col, moved.row, () => {
-      if (gameState === 'playing') {
-        sayTomQuote();
-      }
-    });
+function handlePlayerMove(moved) {
+  if (!moved) return;
+  const allCollected = checkPickup(moved.col, moved.row, () => {
+    if (gameState === 'playing') {
+      sayTomQuote();
+    }
+  });
 
-    if (allCollected) {
-      setGameState('win');
-    }
-    if (
-      !tom.isMoving &&
-      Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
-      Math.floor(tom.y / tileSize) === Math.floor(player.y / tileSize)
-    ) {
-      setGameState('lose');
-    }
+  if (allCollected) {
+    setGameState('win');
+  }
+  if (
+    !tom.isMoving &&
+    Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
+    Math.floor(tom.y / tileSize) === Math.floor(player.y / tileSize)
+  ) {
+    setGameState('lose');
   }
 }
 
