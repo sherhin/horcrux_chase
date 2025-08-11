@@ -11,7 +11,7 @@ global.Audio = class {
   }
 };
 
-const { moveTom, sayTomQuote, initTom, tom, stopTomSpeech } = await import('../js/tom.js');
+const { moveTom, sayTomQuote, initTom, tom, stopTomSpeech, updateSpeechPosition } = await import('../js/tom.js');
 
 const tileSize = 32;
 
@@ -73,12 +73,11 @@ describe('tom character', () => {
     assert.equal(tom.y, 4 * tileSize);
   });
 
-  it('does not move when speaking is true', () => {
+  it('continues to move while speaking is true', () => {
     sayTomQuote();
-    const { x: initialX, y: initialY } = tom;
     moveTom([{ col: 11, row: 2 }], tileSize);
-    assert.equal(tom.x, initialX);
-    assert.equal(tom.y, initialY);
+    assert.equal(tom.x, 11 * tileSize);
+    assert.equal(tom.y, 2 * tileSize);
   });
 
   it('does not move when tom.isMoving is true', () => {
@@ -101,12 +100,31 @@ describe('tom character', () => {
     assert.equal(tom.y, 2 * tileSize);
   });
 
-    it('sayTomQuote shows and hides tomSpeech after timeout', () => {
-      sayTomQuote();
-      assert.equal(div.style.display, 'block');
-      global.advanceTimersByTime(2000);
-      global.advanceTimersByTime(500);
-      assert.equal(div.style.display, 'none');
-    });
+  it('updates speech bubble position to follow Tom', () => {
+    div.offsetWidth = 50;
+    div.offsetHeight = 20;
+    sayTomQuote();
+    const canvas = {
+      getBoundingClientRect: () => ({ left: 0, top: 0, right: 300, bottom: 300 })
+    };
+    tom.x = 5 * tileSize;
+    tom.y = 5 * tileSize;
+    updateSpeechPosition(canvas, tileSize);
+    const startLeft = div.style.left;
+    const startTop = div.style.top;
+    tom.x = 6 * tileSize;
+    tom.y = 6 * tileSize;
+    updateSpeechPosition(canvas, tileSize);
+    assert.notEqual(div.style.left, startLeft);
+    assert.notEqual(div.style.top, startTop);
+  });
+
+  it('sayTomQuote shows and hides tomSpeech after timeout', () => {
+    sayTomQuote();
+    assert.equal(div.style.display, 'block');
+    global.advanceTimersByTime(2000);
+    global.advanceTimersByTime(500);
+    assert.equal(div.style.display, 'none');
+  });
   });
 
