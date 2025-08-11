@@ -300,7 +300,7 @@ export function initDifficulty() {
 
 
 function setupControls() {
-  document.addEventListener('keydown', onKey);
+  window.addEventListener('keydown', onKey);
 
   let startX, startY;
   let lastMove = 0;
@@ -329,9 +329,9 @@ function setupControls() {
       const dy = touch.clientY - startY;
 
       if (Math.abs(dx) > Math.abs(dy)) {
-        onKey({ key: dx > 0 ? 'ArrowRight' : 'ArrowLeft' });
+        onKey({ code: dx > 0 ? 'ArrowRight' : 'ArrowLeft', preventDefault: () => {} });
       } else {
-        onKey({ key: dy > 0 ? 'ArrowDown' : 'ArrowUp' });
+        onKey({ code: dy > 0 ? 'ArrowDown' : 'ArrowUp', preventDefault: () => {} });
       }
 
       startX = touch.clientX;
@@ -351,10 +351,10 @@ function setupControls() {
   );
 
   document.querySelectorAll('#controls .control-btn').forEach(btn => {
-    const key = btn.dataset.key;
+    const code = btn.dataset.key;
     const handler = e => {
       e.preventDefault();
-      onKey({ key });
+      onKey({ code, preventDefault: () => {} });
     };
     btn.addEventListener('click', handler);
     btn.addEventListener('touchstart', handler, { passive: false });
@@ -362,10 +362,11 @@ function setupControls() {
 }
 
 function onKey(e) {
+  e.preventDefault();
   if (gameState !== 'playing') return;
 
   let dx = 0, dy = 0;
-  switch (e.key) {
+  switch (e.code) {
     case 'ArrowUp': dy = -tileSize; break;
     case 'ArrowDown': dy = tileSize; break;
     case 'ArrowLeft': dx = -tileSize; break;
