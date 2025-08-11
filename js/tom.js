@@ -47,7 +47,7 @@ export function initTom(img, tileSize, startCol = 10, startRow = 2) {
 }
 
 export function moveTom(path, tileSize, steps = 1) {
-    if (speaking || tom.isMoving || path.length === 0) return;
+    if (tom.isMoving || path.length === 0) return;
     stepAccumulator += steps;
     const stepsToTake = Math.floor(stepAccumulator);
     if (stepsToTake <= 0) return;
