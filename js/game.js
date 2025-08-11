@@ -97,12 +97,6 @@ function setGameState(state) {
     sessionStorage.setItem('losses', loseCount);
     loseSound.currentTime = 0;
     loseSound.play().catch(() => {});
-    const startScreen = document.getElementById('start-screen');
-    const diffSelect = document.getElementById('difficulty');
-    if (startScreen && diffSelect) {
-      startScreen.style.display = 'block';
-      diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
-    }
   }
   updateScoreboard();
 }
@@ -269,18 +263,15 @@ export function startGame(difficulty) {
 }
 
 function restartGame() {
-  generateLevel();
-  resizeCanvas();
-  if (!resizeBound) {
-    window.addEventListener('resize', resizeCanvas);
-    resizeBound = true;
+  const startScreen = document.getElementById('start-screen');
+  const diffSelect = document.getElementById('difficulty');
+  if (startScreen && diffSelect) {
+    startScreen.style.display = 'block';
+    diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
   }
-  if (assetsLoaded === TOTAL_ASSETS) {
-    setupGame();
-    setGameState('playing');
-    restartBtn.style.display = 'none';
-    stopTomSpeech();
-  }
+  restartBtn.style.display = 'none';
+  stopTomSpeech();
+  gameState = 'start';
 }
 
 export function initDifficulty() {
@@ -477,7 +468,7 @@ function draw() {
   } else if (gameState === 'lose') {
     stopTomSpeech();
     ctx.drawImage(loseImage, 0, 0, displayWidth, displayHeight);
-    restartBtn.style.display = 'none';
+    restartBtn.style.display = 'block';
   } else {
     restartBtn.style.display = 'none';
   }
