@@ -87,6 +87,12 @@ function updateScoreboard() {
 function setGameState(state) {
   if (gameState === state) return;
   gameState = state;
+  if (state === 'win' || state === 'lose') {
+    if (tomInterval) {
+      clearInterval(tomInterval);
+      tomInterval = null;
+    }
+  }
   if (state === 'win') {
     winCount++;
     sessionStorage.setItem('wins', winCount);
@@ -272,6 +278,10 @@ function restartGame() {
     diffSelect.value = sessionStorage.getItem('difficulty') || currentDifficulty;
   }
   restartBtn.style.display = 'none';
+  if (tomInterval) {
+    clearInterval(tomInterval);
+    tomInterval = null;
+  }
   activeDementorCollisions.clear ()
   stopTomSpeech();
   gameState = 'start';
