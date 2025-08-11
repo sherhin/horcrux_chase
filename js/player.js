@@ -29,10 +29,10 @@ export const player = {
     const targetRow = currentRow + Math.sign(dy);
     if (map[targetRow]?.[targetCol] === 0) {
       const occupied = getDementors().some(d => {
-        const currentColD = Math.round(d.x / tileSize);
-        const currentRowD = Math.round(d.y / tileSize);
-        const targetColD = Math.round((d.isMoving ? d.targetX : d.x) / tileSize);
-        const targetRowD = Math.round((d.isMoving ? d.targetY : d.y) / tileSize);
+        const currentColD = Math.floor(d.x / tileSize);
+        const currentRowD = Math.floor(d.y / tileSize);
+        const targetColD = Math.floor((d.isMoving ? d.targetX : d.x) / tileSize);
+        const targetRowD = Math.floor((d.isMoving ? d.targetY : d.y) / tileSize);
         return (currentColD === targetCol && currentRowD === targetRow) ||
                (targetColD === targetCol && targetRowD === targetRow);
       });
