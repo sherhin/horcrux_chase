@@ -89,7 +89,13 @@ describe('tom character', () => {
     assert.equal(tom.y, initialY);
   });
 
-  it('moves even when steps less than 1', () => {
+  it('accumulates fractional steps before moving', () => {
+    const { x: initialX, y: initialY } = tom;
+    moveTom([{ col: 11, row: 2 }], tileSize, 0.5);
+    // Not enough accumulated steps, position should remain unchanged
+    assert.equal(tom.x, initialX);
+    assert.equal(tom.y, initialY);
+    // Second call accumulates to 1.0 and triggers movement
     moveTom([{ col: 11, row: 2 }], tileSize, 0.5);
     assert.equal(tom.x, 11 * tileSize);
     assert.equal(tom.y, 2 * tileSize);

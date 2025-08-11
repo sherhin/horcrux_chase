@@ -29,6 +29,7 @@ const quoteSounds = quoteSoundPaths.map((path) =>
 
 let speaking = false;
 let speechTimer = null;
+let stepAccumulator = 0;
 
 export function initTom(img, tileSize, startCol = 10, startRow = 2) {
     tom.image = img;
@@ -42,14 +43,19 @@ export function initTom(img, tileSize, startCol = 10, startRow = 2) {
         clearTimeout(speechTimer);
         speechTimer = null;
     }
+    stepAccumulator = 0;
 }
 
 export function moveTom(path, tileSize, steps = 1) {
     if (speaking || tom.isMoving || path.length === 0) return;
+    stepAccumulator += steps;
+    const stepsToTake = Math.floor(stepAccumulator);
+    if (stepsToTake <= 0) return;
+    stepAccumulator -= stepsToTake;
     const prevX = tom.x + tileSize / 2;
     const prevY = tom.y + tileSize / 2;
     const stepIndex = Math.min(
-        Math.max(0, Math.floor(steps) - 1),
+        Math.max(0, stepsToTake - 1),
         path.length - 1
     );
     const step = path[stepIndex];
