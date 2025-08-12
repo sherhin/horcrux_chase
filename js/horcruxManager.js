@@ -6,14 +6,20 @@ function isTooClose(x, y, arr, minDistance) {
 
 import { findPath } from './pathfinding.js';
 
-export function generateHorcruxes(templates, map, startPos, forbidden = [], minDistance = 1) {
+export async function generateHorcruxes(
+  templates,
+  map,
+  startPos,
+  forbidden = [],
+  minDistance = 1
+) {
   horcruxes = [];
-  templates.forEach(img => {
+  for (const img of templates) {
     let x, y, path;
     do {
       x = Math.floor(Math.random() * map[0].length);
       y = Math.floor(Math.random() * map.length);
-      path = findPath(startPos.x, startPos.y, x, y, map);
+      path = await findPath(startPos.x, startPos.y, x, y, map);
     } while (
       map[y][x] !== 0 ||
       path.length === 0 ||
@@ -21,7 +27,7 @@ export function generateHorcruxes(templates, map, startPos, forbidden = [], minD
       isTooClose(x, y, forbidden, minDistance)
     );
     horcruxes.push({ image: img, x, y });
-  });
+  }
 }
 
 export function drawHorcruxes(ctx, tileSize) {

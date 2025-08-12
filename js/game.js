@@ -39,6 +39,7 @@ let endButtons;
 let restartBtn;
 let menuBtn;
 let tomInterval;
+let pathfindingPromise = null;
 
 export const DIFFICULTY_SETTINGS = {
   easy: {
@@ -122,14 +123,14 @@ function setGameState(state) {
   updateScoreboard();
 }
 
-function generateLevel() {
+async function generateLevel() {
   while (true) {
     const newMap = generateMap(MAP_WIDTH, MAP_HEIGHT, wallChance);
     const h = { col: 1, row: 1 };
     const t = { col: newMap[0].length - 2, row: newMap.length - 2 };
     if (newMap[h.row][h.col] !== 0) continue;
     if (newMap[t.row][t.col] !== 0) continue;
-    const path = findPath(t.col, t.row, h.col, h.row, newMap);
+    const path = await findPath(t.col, t.row, h.col, h.row, newMap);
     if (path.length === 0) continue;
     map = newMap;
     harryStart = h;
@@ -228,7 +229,7 @@ function assetLoaded() {
   }
 }
 
-function setupGame() {
+async function setupGame() {
   const startPos = { x: harryStart.col, y: harryStart.row };
   player.init(harryImage, tileSize, harryStart.col, harryStart.row);
   initTom(tomImage, tileSize, tomStart.col, tomStart.row);
@@ -239,7 +240,7 @@ function setupGame() {
     locketImage,
     ringImage
   ].slice(0, horcruxCount);
-  generateHorcruxes(horcruxImages, map, startPos, [startPos], MIN_DISTANCE);
+  await generateHorcruxes(horcruxImages, map, startPos, [startPos], MIN_DISTANCE);
   const forbidden = horcruxes.map(h => ({ x: h.x, y: h.y }));
   forbidden.push(startPos);
   generateDementors(
@@ -279,15 +280,16 @@ export function startGame(difficulty) {
   moveCooldown = currentSettings.moveCooldown;
   startRequested = true;
   activeDementorCollisions.clear();
-  generateLevel();
-  resizeCanvas();
-  if (!resizeBound) {
-    window.addEventListener('resize', resizeCanvas);
-    resizeBound = true;
-  }
-  if (assetsLoaded === TOTAL_ASSETS) {
-    setupGame();
-  }
+  generateLevel().then(() => {
+    resizeCanvas();
+    if (!resizeBound) {
+      window.addEventListener('resize', resizeCanvas);
+      resizeBound = true;
+    }
+    if (assetsLoaded === TOTAL_ASSETS) {
+      setupGame();
+    }
+  });
   setGameState('playing');
   endButtons.style.display = 'none';
   stopTomSpeech();
@@ -428,6 +430,7 @@ function startTomLoop() {
   if (tomInterval) clearInterval(tomInterval);
   tomInterval = setInterval(() => {
     if (gameState !== 'playing') return;
+    if (pathfindingPromise) return;
     if (
       !tom.isMoving &&
       Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
@@ -436,14 +439,17 @@ function startTomLoop() {
       setGameState('lose');
       return;
     }
-    const path = findPath(
+    pathfindingPromise = findPath(
       Math.floor(tom.x / tileSize),
       Math.floor(tom.y / tileSize),
       Math.floor(player.x / tileSize),
       Math.floor(player.y / tileSize),
       map
-    );
-    moveTom(path, tileSize, tomSpeed);
+    ).then(path => {
+      moveTom(path, tileSize, tomSpeed);
+    }).finally(() => {
+      pathfindingPromise = null;
+    });
   }, 300 / tomSpeed);
 }
 
