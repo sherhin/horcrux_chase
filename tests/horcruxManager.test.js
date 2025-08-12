@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { generateHorcruxes, horcruxes, checkPickup } from '../js/horcruxManager.js';
 import { findPath } from '../js/pathfinding.js';
 
-test('generateHorcruxes places horcruxes only on free tiles without duplicates', () => {
+test('generateHorcruxes places horcruxes only on free tiles without duplicates', async () => {
   const sequence = [0.5, 0.1, 0, 0, 0, 0, 0.4, 0.5, 0.8, 0.4, 0.5, 0.9];
   let index = 0;
   const originalRandom = Math.random;
@@ -16,7 +16,7 @@ test('generateHorcruxes places horcruxes only on free tiles without duplicates',
     [1, 0, 0]
   ];
 
-  generateHorcruxes(templates, map, { x: 0, y: 0 });
+  await generateHorcruxes(templates, map, { x: 0, y: 0 });
   Math.random = originalRandom;
 
   for (const h of horcruxes) {
@@ -27,7 +27,7 @@ test('generateHorcruxes places horcruxes only on free tiles without duplicates',
   assert.equal(new Set(coords).size, horcruxes.length);
 });
 
-test('generateHorcruxes respects forbidden positions and minDistance', () => {
+test('generateHorcruxes respects forbidden positions and minDistance', async () => {
   const sequence = [0, 0, 0.5, 0.5, 0, 0.4, 0.8, 0.9, 0.3, 0.9];
   let index = 0;
   const originalRandom = Math.random;
@@ -41,7 +41,7 @@ test('generateHorcruxes respects forbidden positions and minDistance', () => {
   ];
 
   const forbidden = [{ x: 1, y: 1 }];
-  generateHorcruxes(templates, map, { x: 0, y: 0 }, forbidden, 2);
+  await generateHorcruxes(templates, map, { x: 0, y: 0 }, forbidden, 2);
   Math.random = originalRandom;
 
   assert.equal(horcruxes.length, 2);
@@ -54,7 +54,7 @@ test('generateHorcruxes respects forbidden positions and minDistance', () => {
   assert.ok(dist >= 2);
 });
 
-test('generateHorcruxes ensures each horcrux is reachable from start', () => {
+test('generateHorcruxes ensures each horcrux is reachable from start', async () => {
   const sequence = [0.6, 0.1, 0.1, 0.9, 0.8, 0.9];
   let index = 0;
   const originalRandom = Math.random;
@@ -68,13 +68,13 @@ test('generateHorcruxes ensures each horcrux is reachable from start', () => {
   ];
   const startPos = { x: 0, y: 0 };
 
-  generateHorcruxes(templates, map, startPos);
+  await generateHorcruxes(templates, map, startPos);
   Math.random = originalRandom;
 
-  horcruxes.forEach(h => {
-    const path = findPath(startPos.x, startPos.y, h.x, h.y, map);
+  for (const h of horcruxes) {
+    const path = await findPath(startPos.x, startPos.y, h.x, h.y, map);
     assert.ok(path.length > 0);
-  });
+  }
 });
 
 test('checkPickup removes horcrux, calls callback and returns true when empty', () => {
