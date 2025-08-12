@@ -87,11 +87,11 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: grid;
-  grid-template-columns: repeat(3, 10vw);
-  grid-template-rows: repeat(3, 10vw);
-  max-width: 150px;
-  max-height: 150px;
-  gap: 1vw;
+  grid-template-columns: repeat(3, 12vw);
+  grid-template-rows: repeat(3, 12vw);
+  max-width: 180px;
+  max-height: 180px;
+  gap: 1.2vw;
   z-index: 30;
 }
 
@@ -100,7 +100,7 @@ body {
   border: 2px solid #d4af37;
   color: #d4af37;
   border-radius: 8px;
-  font-size: 5vw;
+  font-size: 6vw;
   display: flex;
   align-items: center;
   justify-content: center;
