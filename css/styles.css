@@ -82,9 +82,10 @@ body {
 
 /* ===== On-screen controls ===== */
 #controls {
-  position: absolute;
+  position: fixed;
   bottom: 2vh;
-  right: 2vw;
+  left: 50%;
+  transform: translateX(-50%);
   display: grid;
   grid-template-columns: repeat(3, 10vw);
   grid-template-rows: repeat(3, 10vw);
