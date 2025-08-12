@@ -38,6 +38,7 @@ let dementorImage;
 let endButtons;
 let restartBtn;
 let menuBtn;
+let controls;
 let tomInterval;
 let pathfindingPromise = null;
 
@@ -180,9 +181,12 @@ window.onload = () => {
   endButtons = document.getElementById('endButtons');
   restartBtn = document.getElementById('restartBtn');
   menuBtn = document.getElementById('menuBtn');
+  controls = document.getElementById('controls');
   winDisplay = document.getElementById('winCount');
   loseDisplay = document.getElementById('loseCount');
   updateScoreboard();
+
+  if (controls) controls.style.display = 'none';
 
   const images = ASSET_URLS.map(src => loadImage(src));
   [
@@ -509,12 +513,18 @@ function draw() {
     stopTomSpeech();
     ctx.drawImage(winImage, 0, 0, displayWidth, displayHeight);
     endButtons.style.display = 'flex';
+    if (controls) controls.style.display = 'none';
   } else if (gameState === 'lose') {
     stopTomSpeech();
     ctx.drawImage(loseImage, 0, 0, displayWidth, displayHeight);
     endButtons.style.display = 'flex';
+    if (controls) controls.style.display = 'none';
+  } else if (gameState === 'playing') {
+    endButtons.style.display = 'none';
+    if (controls) controls.style.display = 'grid';
   } else {
     endButtons.style.display = 'none';
+    if (controls) controls.style.display = 'none';
   }
 }
 
