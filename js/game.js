@@ -435,6 +435,7 @@ function startTomLoop() {
   tomInterval = setInterval(() => {
     if (gameState !== 'playing') return;
     if (pathfindingPromise) return;
+    if (tom.isMoving) return;
     if (
       !tom.isMoving &&
       Math.floor(tom.x / tileSize) === Math.floor(player.x / tileSize) &&
